@@ -3,252 +3,211 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Henia Cisneros — Libro</title>
+<title>Henia Cisneros — Libro Elegante</title>
 <style>
-  :root{
-    --desk-dark:#3e2a20;
-    --desk-light:#8a694f;
-    --leather-1:#3a0f12;   /* cuero burdeos oscuro */
-    --leather-2:#4a2030;
-    --gold:#c9a84f;
-    --paper:#f7efe0;
-    --paper-edge:#e5d6bf;
-    --stitch:#d2b27a;
-  }
+:root{
+  --cover-dark:#3a1f2c; /* cuero elegante oscuro */
+  --cover-light:#5b3245;
+  --paper:#fbf6ec;
+  --paper-edge:#e5d6bf;
+  --gold:#c9a84f;
+  --stitch:#d2b27a;
+  --shadow: rgba(0,0,0,0.5);
+  --desk-1:#a17c5a;
+  --desk-2:#8a6242;
+}
 
-  html,body{
-    height:100%;margin:0;font-family:Georgia, "Times New Roman", serif;
-    background: linear-gradient(180deg,var(--desk-dark),var(--desk-light));
-    display:flex;align-items:center;justify-content:center;overflow:hidden;color:#2f241f;
-  }
+html,body{
+  height:100%;
+  margin:0;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  background: linear-gradient(180deg,var(--desk-1),var(--desk-2));
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  color:#2f241f;
+}
 
-  /* SCENE - desk */
-  .scene{
-    width:94vw; max-width:1100px; height:86vh; max-height:780px; border-radius:16px;
-    box-shadow: 0 40px 120px rgba(0,0,0,0.6), inset 0 6px 28px rgba(255,255,255,0.02);
-    background:
-      linear-gradient(180deg, rgba(0,0,0,0.08), rgba(255,255,255,0.02)),
-      url('https://images.unsplash.com/photo-1505691723518-36a45b89acb1?auto=format&fit=crop&w=1400&q=80') center/cover no-repeat;
-    position:relative; padding:36px; display:flex; align-items:center; justify-content:center;
-  }
+.scene{
+  width:94vw; max-width:1100px; height:84vh; max-height:760px;
+  border-radius:14px;
+  box-shadow:0 30px 90px rgba(0,0,0,0.6), inset 0 6px 24px rgba(255,255,255,0.02);
+  background: linear-gradient(180deg, rgba(0,0,0,0.06), rgba(255,255,255,0.02));
+  position:relative; 
+  padding:28px; 
+  display:flex; 
+  align-items:center; 
+  justify-content:center;
+}
 
-  /* BOOK WRAPPER (slightly lower to look supported on desk) */
-  .book-wrap{
-    width:720px; max-width:86%; height:540px; max-height:86%; perspective:3600px;
-    display:flex; align-items:center; justify-content:center; position:relative; transform: translateY(6%);
-  }
-  .book-shadow { position:absolute; bottom:6%; width:56%; height:26px; background:radial-gradient(closest-side, rgba(0,0,0,0.6), transparent); filter:blur(18px); z-index:1; }
+.book-wrap{
+  width:680px; max-width:86%; height:520px; max-height:86%;
+  perspective:3300px; 
+  display:flex; 
+  align-items:center; 
+  justify-content:center; 
+  position:relative; 
+  transform: translateY(8%);
+}
 
-  /* BOOK (single bounding box for cover/pages/backcover) */
-  .book{
-    width:560px; height:430px; position:relative; transform-style:preserve-3d; z-index:10; transition: transform 900ms cubic-bezier(.2,.9,.25,1);
-    -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
-  }
+.book-shadow{
+  position:absolute; bottom:4%; width:58%; height:22px;
+  background:radial-gradient(closest-side, rgba(0,0,0,0.55), transparent); 
+  filter:blur(18px); z-index:1;
+}
 
-  /* COVER & BACKCOVER */
-  .cover, .backcover{
-    position:absolute; left:0; top:0; width:100%; height:100%; border-radius:12px; box-sizing:border-box;
-    display:flex; align-items:flex-start; justify-content:center; padding:26px 28px; backface-visibility:hidden;
-    transform-style:preserve-3d; will-change:transform; overflow:visible;
-  }
+.book{
+  width:540px; height:420px; 
+  position:relative; transform-style:preserve-3d; 
+  z-index:10; display:block;
+}
 
-  /* Leather look + integrated gold border (subtle metal reflect) */
-  .cover{
-    background:
-      linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.03)),
-      radial-gradient(1200px 400px at 10% 10%, rgba(255,255,255,0.02), transparent),
-      linear-gradient(180deg, var(--leather-1), var(--leather-2));
-    box-shadow: 0 20px 60px rgba(0,0,0,0.66), inset 0 8px 26px rgba(255,255,255,0.02);
-    border: 6px solid rgba(0,0,0,0.45);
-    transform-origin:left center;
-    position:relative;
-  }
+.cover, .backcover{
+  position:absolute; left:0; top:0; width:100%; height:100%;
+  border-radius:10px; box-sizing:border-box;
+  display:flex; align-items:center; justify-content:center; text-align:center;
+  padding:30px;
+  backface-visibility:hidden; transform-style:preserve-3d; z-index:60;
+  will-change: transform;
+  transform: translateZ(0.01px);
+}
 
-  /* gold frame integrated */
-  .cover .gold-edge{
-    position:absolute; inset:12px; border-radius:10px; pointer-events:none;
-    box-shadow:
-      0 0 0 3px rgba(201,168,79,0.12),
-      inset 0 0 12px rgba(255,240,180,0.02);
-    mask-image: linear-gradient(#000, #000); /* keep subtle */
-  }
+.cover{
+  background: linear-gradient(180deg, var(--cover-dark), var(--cover-light));
+  box-shadow: 0 18px 60px rgba(0,0,0,0.6), inset 0 8px 26px rgba(255,255,255,0.02);
+  border: 3px solid rgba(0,0,0,0.38);
+  transform-origin: left center;
+  position:relative; overflow:visible;
+  font-weight:700;
+}
 
-  /* Title top-left, embossed style */
-  .cover .title{
-    width:100%;
-    text-align:left;
-    color:var(--gold);
-    font-family: "Cormorant Garamond", Georgia, serif;
-    font-size:1.6rem;
-    letter-spacing:0.6px;
-    margin-top:8px;
-    margin-left:18px;
-    padding:8px 0;
-    text-shadow: 0 2px 6px rgba(0,0,0,0.7);
-    font-weight:700;
-  }
-  .cover .subtitle{
-    width:100%; text-align:left; margin-left:18px; color: rgba(255, 239, 200, 0.92); font-size:0.92rem; margin-top:4px; font-style:italic;
-    text-shadow: 0 1px 3px rgba(0,0,0,0.5);
-  }
+.cover .title{
+  color:var(--gold); font-size:2rem; letter-spacing:1px; position:relative;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.05), 0 2px 6px rgba(0,0,0,0.65), 0 -1px 0 rgba(0,0,0,0.12);
+  transform: translateZ(6px);
+}
 
-  /* BACKCOVER */
-  .backcover{
-    transform-origin:right center;
-    transform: rotateY(180deg);
-    background:
-      linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.02)),
-      linear-gradient(180deg, var(--leather-2), var(--leather-1));
-    border:6px solid rgba(0,0,0,0.34);
-    box-shadow: 0 10px 40px rgba(0,0,0,0.55), inset 0 6px 18px rgba(255,255,255,0.02);
-  }
-  .stitch{ position:absolute; right:26px; top:12%; height:76%; width:10px; display:flex; flex-direction:column; align-items:center; justify-content:space-between; z-index:120; }
-  .stitch span{ display:block; width:6px; height:6px; background:var(--stitch); border-radius:2px; box-shadow:0 2px 2px rgba(0,0,0,0.25); transform:rotate(12deg); opacity:0.98 }
+.cover .subtitle{
+  margin-top:12px;
+  font-size:1rem;
+  color: #e2cfa0;
+}
 
-  /* PAGES container sized exactly like cover/backcover */
-  .pages{ position:absolute; left:0; top:0; width:100%; height:100%; transform-style:preserve-3d; pointer-events:auto; z-index:50; }
+.cover::before{
+  content:'';
+  position:absolute; inset:8px;
+  border-radius:8px; pointer-events:none; 
+  box-shadow: inset 0 0 0 2px rgba(0,0,0,0.12);
+}
 
-  /* PAGE visual */
-  .page{
-    position:absolute; left:0; top:0; width:100%; height:100%; border-radius:10px; box-sizing:border-box;
-    background: linear-gradient(180deg, #fbf5e9 0%, var(--paper) 30%, #f0e7d6 100%);
-    border:1px solid rgba(0,0,0,0.06);
-    padding:28px; overflow:hidden; transform-origin:left center; backface-visibility:hidden;
-    transition: transform 720ms cubic-bezier(.2,.9,.25,1), box-shadow 360ms ease;
-    display:flex; align-items:center; justify-content:center; will-change: transform;
-  }
+.backcover{
+  transform-origin:right center;
+  transform: rotateY(180deg);
+  background: linear-gradient(180deg,var(--cover-light),var(--cover-dark));
+  border:3px solid rgba(0,0,0,0.28);
+  box-shadow: 0 10px 40px rgba(0,0,0,0.55), inset 0 6px 18px rgba(255,255,255,0.02);
+  position:relative;
+}
 
-  /* page edge to simulate stacked paper */
-  .page::after{
-    content:''; position:absolute; right:-16px; top:12px; bottom:12px; width:22px; border-radius:4px;
-    background: linear-gradient(180deg, var(--paper-edge), rgba(0,0,0,0.02)); box-shadow: inset 0 0 8px rgba(0,0,0,0.06);
-  }
+.stitch{
+  position:absolute; right:22px; top:12%; height:76%; width:8px; 
+  display:flex; flex-direction:column; align-items:center; justify-content:space-between; z-index:120;
+}
 
-  .inner{
-    width:88%; height:86%; border-radius:6px; padding:18px; box-sizing:border-box;
-    background:
-      radial-gradient(circle at 50% 30%, rgba(255,255,255,0.12), rgba(255,255,255,0.02) 25%),
-      linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.01)),
-      url('https://www.transparenttextures.com/patterns/white-waves.png');
-    display:flex; align-items:center; justify-content:center; text-align:center; color:#3b2d26; font-size:1.02rem; line-height:1.6;
-    box-shadow: inset 0 2px 8px rgba(0,0,0,0.04);
-  }
+.stitch span{ display:block; width:6px; height:6px; background:var(--stitch); border-radius:2px; box-shadow:0 2px 2px rgba(0,0,0,0.25); transform:rotate(12deg); opacity:0.95 }
 
-  .page img{ width:100%; height:100%; object-fit:cover; border-radius:6px; box-shadow:0 6px 18px rgba(0,0,0,0.12) inset; }
+.pages{ position:absolute; left:0; top:0; width:100%; height:100%; transform-style:preserve-3d; pointer-events:auto; z-index:50; }
 
-  /* motion states */
-  .page.turning{ transform: rotateY(-92deg) translateX(8px) scale(1.01); box-shadow: -36px 18px 90px rgba(0,0,0,0.6); z-index:9999 !important; }
-  .page.flipped{ transform: rotateY(-180deg) translateX(-12px); box-shadow:-10px 14px 36px rgba(0,0,0,0.42); z-index:5 !important; }
+.page{
+  position:absolute; left:0; top:0; width:100%; height:100%; border-radius:6px; box-sizing:border-box;
+  background: linear-gradient(180deg, var(--paper), #f6eadc);
+  border:1px solid rgba(0,0,0,0.06);
+  padding:20px; overflow:hidden; transform-origin:left center; backface-visibility:hidden;
+  transition: transform 760ms cubic-bezier(.2,.9,.25,1), box-shadow 360ms ease;
+  display:flex; align-items:center; justify-content:center; will-change: transform;
+}
 
-  /* controls */
-  .controls{ position:absolute; bottom:20px; left:0; right:0; display:flex; justify-content:center; gap:14px; pointer-events:none; z-index:160; }
-  .btn{ pointer-events:auto; background: linear-gradient(180deg,#fff,#f7efe1); border-radius:12px; padding:10px 16px; border:1px solid rgba(0,0,0,0.06); font-weight:700; cursor:pointer; box-shadow:0 10px 28px rgba(0,0,0,0.18); opacity:0; transform:translateY(8px); transition:opacity .28s, transform .28s;}
-  .book-wrap:hover .btn, .book-wrap.touching .btn{ opacity:1; transform:translateY(0); }
+.page::after{
+  content:''; position:absolute; right:-12px; top:10px; bottom:10px; width:14px; border-radius:3px;
+  background: linear-gradient(180deg, var(--paper-edge), rgba(0,0,0,0.02)); 
+  box-shadow: inset 0 0 6px rgba(0,0,0,0.06);
+}
 
-  .top-controls{ position:absolute; top:12px; right:18px; display:flex; gap:10px; z-index:190; }
-  .top-controls button{ background:rgba(255,255,255,0.94); border:1px solid rgba(0,0,0,0.06); padding:8px 10px; border-radius:8px; cursor:pointer; font-weight:700 }
+.inner{
+  width:94%; height:92%; border-radius:4px; padding:16px; box-sizing:border-box;
+  display:flex; align-items:center; justify-content:center; text-align:center; color:#3b2d26; font-size:1.02rem; line-height:1.55;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.01));
+}
 
-  /* final note (appears when fully closed at end) */
-  .final-note{
-    position:absolute; left:50%; transform:translateX(-50%); bottom:7%; padding:14px 18px; background:rgba(255,255,255,0.95); border-radius:12px; box-shadow:0 12px 30px rgba(0,0,0,0.25);
-    font-weight:700; display:none; z-index:220;
-  }
+.page img{ width:100%; height:100%; object-fit:cover; border-radius:6px; box-shadow:0 6px 18px rgba(0,0,0,0.16) inset; }
 
-  /* responsive */
-  @media (max-width:720px){
-    .book{ width:86vw; height:74vw; }
-    .inner{ font-size:0.95rem; padding:12px; }
-    .cover .title{ font-size:1.15rem; margin-left:12px }
-    .cover .subtitle{ font-size:0.8rem }
-    .final-note{ bottom:6%; font-size:0.95rem; }
-  }
+.page.turning{ transform: rotateY(-92deg) translateX(6px) scale(1.01); box-shadow: -28px 14px 70px rgba(0,0,0,0.5); z-index:9999 !important; }
+.page.flipped{ transform: rotateY(-180deg) translateX(-8px); box-shadow:-6px 10px 32px rgba(0,0,0,0.36); z-index:5 !important; }
+
+.controls{ position:absolute; bottom:14px; left:0; right:0; display:flex; justify-content:center; gap:14px; pointer-events:none; z-index:160; }
+.btn{ pointer-events:auto; background: linear-gradient(180deg,#fff,#f4efe4); border-radius:10px; padding:10px 14px; border:1px solid rgba(0,0,0,0.06); font-weight:700; cursor:pointer; box-shadow:0 8px 20px rgba(0,0,0,0.18); opacity:0; transform:translateY(8px); transition:opacity .28s, transform .28s;}
+.book-wrap:hover .btn, .book-wrap.touching .btn{ opacity:1; transform:translateY(0); }
+
+.top-controls{ position:absolute; top:12px; right:18px; display:flex; gap:10px; z-index:180; }
+.top-controls button{ background:rgba(255,255,255,0.92); border:1px solid rgba(0,0,0,0.06); padding:8px 10px; border-radius:8px; cursor:pointer; font-weight:700 }
+
+@media (max-width:720px){
+  .book{ width:86vw; height:74vw; }
+  .inner{ font-size:0.94rem; padding:12px; }
+  .cover .title{ font-size:1.4rem }
+}
 </style>
 </head>
 <body>
-  <div class="scene" id="scene">
-    <div class="book-wrap" id="bookWrap">
-      <div class="book-shadow" aria-hidden="true"></div>
+<div class="scene">
+  <div class="book-wrap" id="bookWrap">
+    <div class="book-shadow" aria-hidden="true"></div>
 
-      <div class="book" id="book">
-        <!-- COVER -->
-        <div class="cover" id="cover" aria-hidden="false">
-          <div class="gold-edge" aria-hidden="true"></div>
-          <div>
-            <div class="title">Henia Cisneros</div>
-            <div class="subtitle">Con todo mi cariño en tu cumpleaños</div>
-          </div>
-        
- </div>
-        <!-- PAGES -->
-        <div class="pages" id="pages">
-          <div class="page" data-index="0">
-            <div class="inner"><img src="img/pagina1.jpg" alt="Foto 1"></div>
-          </div>
-           
-          <div class="page" data-index="1">
-            <div class="inner">
-              <div>
-                <p style="margin:0;"><strong>Querida Henia,</strong><br><br>
-                Hoy celebramos no solo tu día, sino la hermosa historia que has construido. Gracias por tu amor, tu sabiduría y por regalar al mundo una hija tan maravillosa. Este pequeño libro es un reflejo del cariño que sentimos por ti.</p>
-              </div>
-    </div>
-          </div>
-
-          <div class="page" data-index="2">
-            <div class="inner"><img src="img/pagina2.jpg" alt="Foto 2"></div>
-          </div>
-
-          <div class="page" data-index="3">
-            <div class="inner"><img src="img/pagina3.jpg" alt="Foto 3"></div>
-          </div>
-
-          <div class="page" data-index="4">
-            <div class="inner">
-              <div>
-                <p style="margin:0;">Que nunca falte en tu vida la alegría, la paz y la sonrisa que siempre te acompaña. Eres inspiración, fortaleza y dulzura.</p>
-                <p style="margin-top:26px; font-weight:700;">Con cariño,<br>Manuel</p>
-              </div>
-            </div>
-          </div>
-        </div><!-- /pages -->
-
-        <!-- BACK COVER -->
-        <div class="backcover" id="backcover" aria-hidden="true">
-          <div class="stitch" aria-hidden="true">
-            <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
-          </div>
+    <div class="book" id="book">
+      <div class="cover" id="cover">
+        <div>
+          <div class="title">Henia Cisneros</div>
+          <div class="subtitle">Por un día lleno de cariño y alegría</div>
         </div>
-      </div><!-- /book -->
-
-      <!-- Controls -->
-      <div class="controls" role="toolbar" aria-label="Navegación del libro">
-        <button class="btn" id="prevBtn">⟵ Atrás</button>
-        <button class="btn" id="nextBtn">Siguiente ⟶</button>
       </div>
 
-      <!-- Top controls -->
-      <div class="top-controls">
-        <button id="audioBtn">🔈 Música</button>
-        <button id="resetBtn">⤺ Volver</button>
+      <div class="pages" id="pages">
+        <div class="page" data-index="0"><div class="inner"><img src="img/pagina1.jpg" alt="Foto 1"></div></div>
+        <div class="page" data-index="1"><div class="inner"><p>Querida Henia, gracias por tu amor y por todo lo que inspiras.</p></div></div>
+        <div class="page" data-index="2"><div class="inner"><img src="img/pagina2.jpg" alt="Foto 2"></div></div>
+        <div class="page" data-index="3"><div class="inner"><img src="img/pagina3.jpg" alt="Foto 3"></div></div>
+        <div class="page" data-index="4"><div class="inner"><p>Que nunca falte en tu vida la alegría, la paz y la sonrisa que siempre te acompaña.</p><p style="margin-top:20px; font-weight:700;">Con cariño,<br>Manuel</p></div></div>
       </div>
 
-      <!-- final note -->
-      <div class="final-note" id="finalNote">Con cariño, Manuel (Pepechuy) </div>
-    </div><!-- /book-wrap -->
-  </div><!-- /scene -->
+      <div class="backcover" id="backcover">
+        <div class="stitch" aria-hidden="true">
+          <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+        </div>
+      </div>
+    </div>
 
-  <!-- Audio placeholders (public examples) -->
-  <audio id="pageSound" preload="auto">
-    <source src="https://www.soundjay.com/books/page-turn-4.mp3" type="audio/mpeg">
-  </audio>
-  <audio id="bgMusic" preload="auto" loop>
-    <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_efc06752a0.mp3?filename=soft-piano-ambient-112191.mp3" type="audio/mpeg">
-  </audio>
+    <div class="controls">
+      <button class="btn" id="prevBtn">⟵ Atrás</button>
+      <button class="btn" id="nextBtn">Siguiente ⟶</button>
+    </div>
+
+    <div class="top-controls">
+      <button id="audioBtn">🔈 Música</button>
+      <button id="resetBtn">⤺ Volver</button>
+    </div>
+  </div>
+</div>
+
+<audio id="pageSound" preload="auto">
+  <source src="https://www.soundjay.com/books/page-turn-4.mp3" type="audio/mpeg">
+</audio>
+<audio id="bgMusic" preload="auto" loop>
+  <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_efc06752a0.mp3?filename=soft-piano-ambient-112191.mp3" type="audio/mpeg">
+</audio>
 
 <script>
 (function(){
-  // Elements
-  const book = document.getElementById('book');
   const pagesContainer = document.getElementById('pages');
   let pageEls = Array.from(pagesContainer.querySelectorAll('.page'));
   const cover = document.getElementById('cover');
@@ -260,14 +219,13 @@
   const pageSound = document.getElementById('pageSound');
   const bgMusic = document.getElementById('bgMusic');
   const bookWrap = document.getElementById('bookWrap');
-  const finalNote = document.getElementById('finalNote');
-
   let current = 0;
   let audioOn = false;
+  const total = pageEls.length;
   let isAnimating = false;
 
-  // Helpers
   function syncSizing(){
+    const book = document.getElementById('book');
     const r = book.getBoundingClientRect();
     [cover, backcover, pagesContainer].forEach(el=>{
       el.style.width = r.width + 'px';
@@ -275,231 +233,99 @@
     });
     pageEls.forEach(p=>{ p.style.width = r.width + 'px'; p.style.height = r.height + 'px'; });
   }
-  setTimeout(syncSizing, 30);
+  setTimeout(syncSizing, 40);
   window.addEventListener('resize', syncSizing);
 
-  function updateZIndices(){
-    pageEls.forEach((p, i) => {
-      if(p.classList.contains('flipped')){
-        p.style.zIndex = 10 + i; // behind
-      } else {
-        p.style.zIndex = 2000 - i*2; // above
-      }
-    });
-    cover.style.zIndex = 3000;
-    backcover.style.zIndex = 2500;
+  function setStack(){
+    pageEls.forEach((p,i) => { p.style.zIndex = (1000 - i*2).toString(); });
   }
-  updateZIndices();
+  setStack();
 
-  function playPageSound(){
-    try{
-      if(pageSound && pageSound.querySelector('source') && audioOn){
-        pageSound.currentTime = 0;
-        pageSound.play().catch(()=>{});
-      }
-    }catch(e){}
-  }
-  function tryPlayBg(){
-    try{
-      if(bgMusic && bgMusic.querySelector('source') && audioOn){
-        bgMusic.volume = 0.22;
-        bgMusic.play().then(()=> audioBtn.textContent='🔊 Música ON').catch(()=>{ audioBtn.textContent='🔈 Música (pulsa)'; });
-      } else {
-        audioBtn.textContent = (audioOn? '🔊 Sonidos ON' : '🔈 Música');
-      }
-    }catch(e){}
-  }
+  function playPageSound(){ if(audioOn){ pageSound.currentTime=0; pageSound.play().catch(()=>{}); } }
+  function tryPlayBg(){ if(audioOn){ bgMusic.volume=0.22; bgMusic.play().then(()=> audioBtn.textContent='🔊 Música ON').catch(()=>{ audioBtn.textContent='🔈 Música'; }); } }
 
-  // Prevent interaction while animating
-  function lock() { isAnimating = true; bookWrap.classList.add('anim'); }
-  function unlock(){ isAnimating = false; bookWrap.classList.remove('anim'); }
-
-  // Flip next
   function flipNext(){
     if(isAnimating) return;
-    if(current >= pageEls.length){
-      closeToBackCover();
-      return;
-    }
+    if(current>=total){ backcover.style.transform='rotateY(0deg)'; cover.style.transform='rotateY(0deg)'; return; }
     const page = pageEls[current];
     if(!page) return;
-    lock();
-    // raise page for animation
-    page.style.zIndex = 6000;
+    isAnimating=true;
+    page.style.zIndex=9999;
     page.classList.add('turning');
-    // small cover tilt on first flip
-    if(current === 0){
-      cover.style.transition = 'transform 520ms cubic-bezier(.2,.9,.25,1)';
-      cover.style.transform = 'rotateY(-130deg) translateZ(0.01px)';
-    }
     playPageSound();
-    // use requestAnimationFrame to avoid paint flicker in some browsers
-    requestAnimationFrame(()=>{
-      setTimeout(()=>{
-        page.classList.remove('turning');
-        page.classList.add('flipped');
-        current++;
-        updateZIndices();
-        unlock();
-        if(current === pageEls.length){
-          setTimeout(()=>{ backcover.style.transform = 'rotateY(0deg)'; cover.style.transform = 'rotateY(0deg)'; }, 380);
-          setTimeout(()=> showFinalNote(), 900);
-        }
-      }, 420);
-    });
+    if(current===0){ cover.style.transition='transform 520ms cubic-bezier(.2,.9,.25,1)'; cover.style.transform='rotateY(-130deg)'; }
+    setTimeout(()=>{
+      page.classList.remove('turning');
+      page.classList.add('flipped');
+      page.style.zIndex = (10+current).toString();
+      current++;
+      if(current===total){ setTimeout(()=>{ backcover.style.transform='rotateY(0deg)'; cover.style.transform='rotateY(0deg)'; }, 380); }
+      isAnimating=false;
+    },440);
   }
 
-  // Flip prev
   function flipPrev(){
-    if(isAnimating) return;
-    if(current <= 0) return;
-    lock();
-    const idx = current - 1;
-    const page = pageEls[idx];
-    if(!page){ unlock(); return; }
-    // bring front and unflip
-    page.style.zIndex = 6000;
+    if(isAnimating || current<=0) return;
+    const idx=current-1;
+    const page=pageEls[idx];
+    if(!page) return;
+    isAnimating=true;
+    page.style.zIndex=9999;
     page.classList.remove('flipped');
     playPageSound();
-    setTimeout(()=>{
-      updateZIndices();
-      unlock();
-    }, 420);
+    setTimeout(()=>{ setStack(); isAnimating=false; },460);
     current--;
-    backcover.style.transform = 'rotateY(180deg)';
-    hideFinalNote();
-    if(current === 0) cover.style.transform = 'rotateY(0deg)';
-    else cover.style.transform = 'rotateY(-140deg)';
+    backcover.style.transform='rotateY(180deg)';
+    cover.style.transform = (current===0? 'rotateY(0deg)' : 'rotateY(-140deg)');
   }
 
-  // Close to backcover
-  function closeToBackCover(){
-    if(isAnimating) return;
-    lock();
-    for(let i = current; i < pageEls.length; i++){
-      const p = pageEls[i];
-      p.classList.add('flipped');
-    }
-    updateZIndices();
-    current = pageEls.length;
-    setTimeout(()=>{
-      backcover.style.transform = 'rotateY(0deg)';
-      cover.style.transform = 'rotateY(0deg)';
-      showFinalNote();
-      unlock();
-    }, 420);
-  }
+  nextBtn.addEventListener('click',flipNext);
+  prevBtn.addEventListener('click',flipPrev);
 
-  // Final note UX
-  function showFinalNote(){
-    finalNote.style.display = 'block';
-    finalNote.style.opacity = '0';
-    finalNote.style.transform = 'translateX(-50%) translateY(6px)';
-    setTimeout(()=>{ finalNote.style.transition = 'opacity 420ms, transform 420ms'; finalNote.style.opacity='1'; finalNote.style.transform='translateX(-50%) translateY(0)'; }, 40);
-  }
-  function hideFinalNote(){
-    finalNote.style.transition = 'opacity 220ms, transform 220ms';
-    finalNote.style.opacity = '0';
-    finalNote.style.transform = 'translateX(-50%) translateY(6px)';
-    setTimeout(()=>{ finalNote.style.display = 'none'; }, 240);
-  }
-
-  // UI events
-  nextBtn.addEventListener('click', flipNext);
-  prevBtn.addEventListener('click', flipPrev);
-  resetBtn.addEventListener('click', ()=>{
-    if(isAnimating) return;
-    pageEls.forEach(p=> p.classList.remove('flipped','turning'));
-    current = 0;
-    updateZIndices();
-    backcover.style.transform = 'rotateY(180deg)';
-    cover.style.transform = 'rotateY(0deg)';
-    hideFinalNote();
+  resetBtn.addEventListener('click',()=>{
+    pageEls.forEach(p => { p.classList.remove('flipped','turning'); });
+    current=0;
+    setStack();
+    backcover.style.transform='rotateY(180deg)';
+    cover.style.transform='rotateY(0deg)';
   });
 
-  audioBtn.addEventListener('click', ()=>{
-    audioOn = !audioOn;
-    tryPlayBg();
-    if(!audioOn){ try{ bgMusic.pause(); audioBtn.textContent='🔈 Música'; }catch(e){} }
+  audioBtn.addEventListener('click',()=>{
+    audioOn=!audioOn; tryPlayBg();
+    if(!audioOn){ bgMusic.pause(); audioBtn.textContent='🔈 Música'; }
   });
 
-  // Click on bookWrap: left edge prev, right edge next, center next
-  bookWrap.addEventListener('click', (ev)=>{
-    if(isAnimating) return;
-    const rect = ev.currentTarget.getBoundingClientRect();
-    const x = ev.clientX - rect.left;
-    const edge = Math.max(40, rect.width*0.12);
-    if(x > rect.width - edge) flipNext();
-    else if(x < edge) flipPrev();
+  bookWrap.addEventListener('click',(ev)=>{
+    const rect=ev.currentTarget.getBoundingClientRect();
+    const x=ev.clientX-rect.left;
+    const edge=Math.max(40, rect.width*0.12);
+    if(x>rect.width-edge) flipNext();
+    else if(x<edge) flipPrev();
     else flipNext();
   });
 
-  // Swipe support
-  let startX = 0, startY = 0, moved = false;
-  bookWrap.addEventListener('touchstart', (e)=>{
-    const t = e.touches[0];
-    startX = t.clientX; startY = t.clientY; moved=false;
-    bookWrap.classList.add('touching');
-  }, {passive:true});
-  bookWrap.addEventListener('touchmove', ()=>{ moved=true; }, {passive:true});
-  bookWrap.addEventListener('touchend', (e)=>{
+  let startX=0, startY=0, moved=false;
+  bookWrap.addEventListener('touchstart',(e)=>{ const t=e.touches[0]; startX=t.clientX; startY=t.clientY; moved=false; bookWrap.classList.add('touching'); },{passive:true});
+  bookWrap.addEventListener('touchmove',(e)=>{ moved=true; },{passive:true});
+  bookWrap.addEventListener('touchend',(e)=>{
     bookWrap.classList.remove('touching');
-    if(isAnimating) return;
-    const t = e.changedTouches[0];
-    const dx = t.clientX - startX;
-    const dy = t.clientY - startY;
-    const absDx = Math.abs(dx), absDy = Math.abs(dy);
-    if(absDx > 30 && absDx > absDy){
-      if(dx < 0) flipNext(); else flipPrev();
-    } else {
-      if(!moved) flipNext();
-    }
-  }, {passive:true});
+    const t=e.changedTouches[0]; const dx=t.clientX-startX; const dy=t.clientY-startY;
+    const absDx=Math.abs(dx), absDy=Math.abs(dy);
+    if(absDx>30 && absDx>absDy){ dx<0?flipNext():flipPrev(); }
+    else{ if(!moved) flipNext(); }
+  },{passive:true});
 
-  // Keyboard
-  document.addEventListener('keydown', (e)=>{
-    if(isAnimating) return;
-    if(e.key === 'ArrowRight') flipNext();
-    if(e.key === 'ArrowLeft') flipPrev();
-  });
+  document.addEventListener('keydown',(e)=>{ if(e.key==='ArrowRight') flipNext(); if(e.key==='ArrowLeft') flipPrev(); });
 
-  // initial states
-  backcover.style.transform = 'rotateY(180deg)';
-  updateZIndices();
+  backcover.style.transform='rotateY(180deg)';
 
-  // Auto open sequence (2.5s) with smooth steps (no flicker)
   function autoOpen(){
-    cover.style.transition = 'transform 700ms cubic-bezier(.2,.9,.25,1)';
-    setTimeout(()=>{ cover.style.transform = 'rotateY(-120deg) translateZ(0.01px)'; }, 60);
-    setTimeout(()=>{ cover.style.transform = 'rotateY(-150deg) translateZ(0.01px)'; try{ if(pageSound && pageSound.querySelector('source')) { pageSound.currentTime = 0; pageSound.play().catch(()=>{}); } }catch(e){} }, 380);
-    setTimeout(()=>{ cover.style.transform = 'rotateY(-140deg) translateZ(0.01px)'; }, 920);
+    cover.style.transition='transform 700ms cubic-bezier(.2,.9,.25,1)';
+    setTimeout(()=>{ cover.style.transform='rotateY(-120deg)'; playPageSound(); },60);
+    setTimeout(()=>{ cover.style.transform='rotateY(-150deg)'; playPageSound(); },500);
+    setTimeout(()=>{ cover.style.transform='rotateY(0deg)'; },1000);
   }
-
-  function tryAutoPlayMusic(){
-    try{
-      if(bgMusic && bgMusic.querySelector('source')){
-        bgMusic.volume = 0.22;
-        bgMusic.play().then(()=> { audioOn = true; audioBtn.textContent='🔊 Música ON'; })
-        .catch(()=>{ audioOn = false; audioBtn.textContent='🔈 Música'; });
-      }
-    }catch(e){}
-  }
-
-  // Start after small delay
-  setTimeout(()=>{
-    syncSizing();
-    autoOpen();
-    tryAutoPlayMusic();
-  }, 2500);
-
-  // Refresh pages if DOM changes
-  function refreshPages(){ pageEls = Array.from(document.querySelectorAll('.page')); updateZIndices(); syncSizing(); }
-  window.addEventListener('resize', ()=>{ syncSizing(); refreshPages(); });
-
-  // Debug helpers
-  window._bookDebug = { flipNext, flipPrev, updateZIndices, syncSizing, refreshPages };
-  console.log('Versión final cargada. Reemplaza img/pagina*.jpg y audio si deseas.');
-
+  autoOpen();
 })();
 </script>
 </body>
