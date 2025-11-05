@@ -1,209 +1,374 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Libro para Henia Cisneros</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Libro — Henia Cisneros</title>
 <style>
-body {
-  margin: 0;
-  padding: 0;
-  height: 100vh;
-  background: linear-gradient(135deg, #f7e7ce, #f2d5c4, #e8f0e3);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-family: "Georgia", serif;
-  overflow: hidden;
-}
+  :root{
+    --wood-1: #8b6b52;
+    --wood-2: #a6825d;
+    --bg: linear-gradient(180deg, #bea88a 0%, #a98a6f 100%);
+    --cover-dark: #20121b; /* negro morado oscuro */
+    --cover-high: #43283f; /* reflejo morado */
+    --gold: #bfa06b;
+    --paper: #fbf6ec;
+    --paper-edge: #e6d8c2;
+    --shadow: rgba(0,0,0,0.35);
+  }
 
-.book {
-  width: 700px;
-  height: 450px;
-  perspective: 2500px;
-  position: relative;
-}
+  /* Body / escenario */
+  html,body{height:100%;margin:0;background:var(--bg);font-family:Georgia, serif;display:flex;align-items:center;justify-content:center;overflow:hidden}
+  .scene{
+    width:92vw;max-width:980px;height:68vh;max-height:680px;display:flex;align-items:center;justify-content:center;
+    background:
+      linear-gradient(180deg, rgba(0,0,0,0.06), rgba(255,255,255,0.02)) ,
+      url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800"><rect width="100%" height="100%" fill="%23b89b7f"/><g opacity="0.06"><rect x="0" y="0" width="1200" height="800" fill="%23000000"/></g></svg>') center/cover no-repeat;
+    border-radius:14px; box-shadow: 0 30px 80px rgba(0,0,0,0.45), inset 0 3px 20px rgba(255,255,255,0.02);
+    position:relative;padding:40px;
+  }
 
-/* Páginas */
-.page {
-  width: 100%;
-  height: 100%;
-  background: #f9f5ef url('https://www.transparenttextures.com/patterns/old-wall.png');
-  background-size: cover;
-  border: 1px solid #cbb59d;
-  border-radius: 8px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.25);
-  position: absolute;
-  transform-origin: left;
-  transition: transform 1s ease, z-index 1s ease, box-shadow 0.6s ease;
-  backface-visibility: hidden;
-  overflow: hidden;
-  padding: 30px;
-  box-sizing: border-box;
-}
+  /* Book container: perspective */
+  .book-wrap{width:760px;max-width:86%;height:80%;max-height:86%;perspective:2600px;display:flex;align-items:center;justify-content:center;position:relative}
+  .book{
+    width:640px;max-width:100%;height:100%;max-height:640px;position:relative;transform-style:preserve-3d;
+    transition: transform 0.9s cubic-bezier(.2,.9,.25,1);
+    display:block;
+  }
 
-/* Curvatura y sombra durante el paso */
-.page.flipped {
-  transform: rotateY(-180deg);
-  z-index: 0 !important;
-  box-shadow: -10px 0 30px rgba(0,0,0,0.2) inset;
-}
+  /* shadow base under book */
+  .book-shadow{position:absolute;inset:auto 0 18px 0;height:28px;filter:blur(18px);opacity:0.55;background:radial-gradient(closest-side, rgba(0,0,0,0.45), transparent);transform:translateY(20px);z-index:0}
 
-.page.turning {
-  box-shadow: 0 0 25px rgba(0,0,0,0.25);
-  transform: rotateY(-90deg) scale(1.02);
-}
+  /* Cover & backcover (thicker) */
+  .cover, .backcover{
+    position:absolute;left:0;top:0;width:100%;height:100%;border-radius:8px;box-sizing:border-box;
+    transform-style:preserve-3d;backface-visibility:hidden;
+    display:flex;align-items:center;justify-content:center;text-align:center;color:var(--paper);z-index:60;
+  }
+  .cover{
+    background:linear-gradient(180deg,var(--cover-dark),var(--cover-high));
+    border:6px solid rgba(0,0,0,0.25);
+    box-shadow: 0 18px 40px rgba(0,0,0,0.5);
+    transform-origin:left center;
+    padding:32px;
+    font-weight:700;font-size:1.8rem;letter-spacing:1px;
+  }
+  .cover .title{
+    font-family: 'Cormorant Garamond', Georgia, serif;font-size:2.4rem;
+    color:whitesmoke;text-shadow:0 2px 6px rgba(0,0,0,0.5)
+  }
+  .cover .sub{font-size:0.95rem;color:rgba(255,255,255,0.8);margin-top:8px;font-style:italic}
 
-/* Z-index orden */
-.page:nth-child(1) { z-index: 6; }
-.page:nth-child(2) { z-index: 5; }
-.page:nth-child(3) { z-index: 4; }
-.page:nth-child(4) { z-index: 3; }
-.page:nth-child(5) { z-index: 2; }
-.page:nth-child(6) { z-index: 1; }
+  .backcover{
+    transform-origin:right center;
+    transform: rotateY(180deg);
+    background:linear-gradient(180deg,var(--cover-high),var(--cover-dark));
+    border:6px solid rgba(0,0,0,0.2);
+  }
 
-/* Portada */
-.page.cover {
-  background: linear-gradient(135deg, #e0bfa1, #d3a984);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  font-family: "Cormorant Garamond", serif;
-  color: #fff;
-  text-shadow: 1px 1px 2px rgba(0,0,0,0.4);
-}
+  /* Book pages stack */
+  .pages{position:absolute;left:8px;top:6px;right:8px;bottom:6px;pointer-events:auto;transform-style:preserve-3d}
+  .page{
+    position:absolute;left:0;top:0;width:100%;height:100%;border-radius:6px;
+    background:var(--paper);box-shadow:0 10px 30px rgba(0,0,0,0.22);
+    transform-origin:left center;backface-visibility:hidden;overflow:hidden;padding:26px;box-sizing:border-box;
+    transition: transform 1s cubic-bezier(.2,.9,.25,1), box-shadow 0.6s ease, filter 0.6s ease;
+    display:flex;align-items:center;justify-content:center;
+  }
 
-.page.cover h1 {
-  font-size: 2.8em;
-  letter-spacing: 1px;
-}
+  /* paper edge visual */
+  .page::after{
+    content:'';position:absolute;right:-10px;top:8px;bottom:8px;width:12px;background:linear-gradient(180deg,var(--paper-edge), rgba(0,0,0,0.02));border-radius:0 6px 6px 0;box-shadow:inset 0 0 6px rgba(0,0,0,0.06)
+  }
 
-/* Imagen y texto */
-.page img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 5px;
-}
+  /* Paper texture (subtle) */
+  .page .content{width:92%;height:92%;background:
+    linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02)),
+    url('https://www.transparenttextures.com/patterns/white-waves.png');background-blend-mode:multiply;
+    padding:18px;border-radius:4px;box-sizing:border-box;display:flex;align-items:center;justify-content:center;text-align:center;color:#3d2e24;font-size:1.1rem;line-height:1.55
+  }
 
-.page p {
-  font-size: 1.3em;
-  line-height: 1.6;
-  color: #4a3b2d;
-}
+  /* image covers */
+  .page img{width:100%;height:100%;object-fit:cover;border-radius:4px;box-shadow:inset 0 0 0 1px rgba(0,0,0,0.03)}
 
-/* Controles */
-.controls {
-  position: absolute;
-  bottom: 15px;
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  opacity: 0;
-  transition: opacity 0.4s ease;
-}
+  /* stacking z-index - first child is cover, so pages start from 2.. */
+  /* We'll set z dynamically in JS but provide defaults for up to 8 pages: */
+  .page[data-i="1"]{z-index:58}
+  .page[data-i="2"]{z-index:56}
+  .page[data-i="3"]{z-index:54}
+  .page[data-i="4"]{z-index:52}
+  .page[data-i="5"]{z-index:50}
+  .page[data-i="6"]{z-index:48}
 
-.book:hover .controls,
-.book:active .controls {
-  opacity: 1;
-}
+  /* turned page style — more realistic curvature */
+  .page.turning{
+    transform: rotateY(-90deg) translateX(6px) scale(1.01);
+    box-shadow: -30px 12px 60px rgba(0,0,0,0.45);
+    filter:brightness(0.98);
+    z-index:70 !important;
+  }
+  .page.flipped{
+    transform: rotateY(-180deg) translateX(-6px);
+    z-index:10 !important;
+    box-shadow: -4px 8px 22px rgba(0,0,0,0.28);
+    filter:brightness(0.99);
+  }
 
-button {
-  background: rgba(255,255,255,0.8);
-  border: 1px solid #cbb59d;
-  border-radius: 4px;
-  padding: 8px 16px;
-  font-size: 1em;
-  color: #4a3b2d;
-  cursor: pointer;
-  transition: background 0.3s;
-}
+  /* controls: buttons appear on hover/touch */
+  .controls{
+    position:absolute;left:0;right:0;bottom:14px;display:flex;justify-content:center;gap:14px;pointer-events:none;
+  }
+  .control-btn{
+    pointer-events:auto;
+    background:linear-gradient(180deg,rgba(255,255,255,0.95),rgba(245,240,232,0.9));
+    border:1px solid rgba(0,0,0,0.08);padding:8px 14px;border-radius:8px;font-weight:700;color:#2f2318;cursor:pointer;
+    box-shadow:0 6px 18px rgba(0,0,0,0.18);opacity:0;transform:translateY(8px);transition:opacity .35s, transform .35s;
+  }
+  .book-wrap:hover .control-btn, .book-wrap.touching .control-btn { opacity:1; transform:translateY(0); }
 
-button:hover {
-  background: #f0e4d7;
-}
+  /* small top controls */
+  .top-controls{position:absolute;top:14px;left:18px;display:flex;gap:10px}
+  .top-controls button{background:transparent;border:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.9);padding:8px;border-radius:8px;cursor:pointer;backdrop-filter:blur(6px)}
+
+  /* responsive tweaks */
+  @media (max-width:700px){
+    .book{width:86vw;height:76vw}
+    .book-shadow{opacity:0.6}
+    .cover .title{font-size:1.6rem}
+    .page .content{font-size:1rem;padding:12px}
+  }
 </style>
 </head>
 <body>
 
-<div class="book" id="book">
-  <!-- Portada -->
-  <div class="page cover">
-    <h1>Henia Cisneros</h1>
-  </div>
+<div class="scene" id="scene">
+  <div class="book-wrap" id="bookWrap">
+    <div class="book-shadow"></div>
 
-  <!-- Página 1 -->
-  <div class="page">
-    <img src="img/pagina1.jpg" alt="Foto 1">
-  </div>
+    <div class="book" id="book">
 
-  <!-- Página 2 -->
-  <div class="page">
-    <p>
-      Querida Henia,<br><br>
-      Hoy celebramos no solo tu día, sino la hermosa historia que has construido.  
-      Gracias por tu amor, tu sabiduría y por regalar al mundo una hija tan maravillosa.  
-      Este pequeño libro es un reflejo del cariño que sentimos por ti.
-    </p>
-  </div>
+      <!-- Portada -->
+      <div class="cover" id="cover">
+        <div>
+          <div class="title">Henia Cisneros</div>
+          <!-- portada sin dedicatoria; dedicatoria final en última página -->
+        </div>
+      </div>
 
-  <!-- Página 3 -->
-  <div class="page">
-    <img src="img/pagina2.jpg" alt="Foto 2">
-  </div>
+      <!-- Pages container -->
+      <div class="pages" id="pages">
+        <!-- Page structure: data-i sequential (1..N). Replace img src/text later -->
+        <!-- Page 1 (image) -->
+        <div class="page" data-i="1">
+          <div class="content"><img src="img/pagina1.jpg" alt="Foto 1"></div>
+        </div>
 
-  <!-- Página 4 -->
-  <div class="page">
-    <img src="img/pagina3.jpg" alt="Foto 3">
-  </div>
+        <!-- Page 2 (texto) -->
+        <div class="page" data-i="2">
+          <div class="content">
+            <div>
+              <p style="margin:0;">
+                <strong>Querida Henia,</strong><br><br>
+                Hoy celebramos no solo tu día, sino la hermosa historia que has construido. Gracias por tu amor, tu sabiduría y por regalar al mundo una hija tan maravillosa. Este pequeño libro es un reflejo del cariño que sentimos por ti.
+              </p>
+            </div>
+          </div>
+        </div>
 
-  <!-- Página 5 -->
-  <div class="page">
-    <p>
-      Que nunca falte en tu vida la alegría, la paz y la sonrisa que siempre te acompaña.  
-      Eres inspiración, fortaleza y dulzura.<br><br>
-      <strong>Con cariño,<br>Manuel</strong>
-    </p>
-  </div>
+        <!-- Page 3 (image) -->
+        <div class="page" data-i="3">
+          <div class="content"><img src="img/pagina2.jpg" alt="Foto 2"></div>
+        </div>
 
-  <!-- Controles -->
-  <div class="controls">
-    <button id="prevBtn">⟵ Atrás</button>
-    <button id="nextBtn">⟶ Siguiente</button>
-  </div>
-</div>
+        <!-- Page 4 (image) -->
+        <div class="page" data-i="4">
+          <div class="content"><img src="img/pagina3.jpg" alt="Foto 3"></div>
+        </div>
+
+        <!-- Page 5 (final texto) -->
+        <div class="page" data-i="5">
+          <div class="content">
+            <div>
+              <p style="margin:0;">
+                Que nunca falte en tu vida la alegría, la paz y la sonrisa que siempre te acompaña. Eres inspiración, fortaleza y dulzura.
+              </p>
+              <p style="margin-top:28px;font-weight:700;">Con cariño,<br>Manuel</p>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /pages -->
+
+      <!-- Backcover -->
+      <div class="backcover"></div>
+    </div><!-- /book -->
+
+    <!-- Controls -->
+    <div class="controls">
+      <button class="control-btn" id="btnPrev">⟵ Atrás</button>
+      <button class="control-btn" id="btnNext">Siguiente ⟶</button>
+    </div>
+
+    <!-- Top small controls: audio on/off and a volver (reset close) -->
+    <div class="top-controls">
+      <button id="audioBtn">🔈 Música</button>
+      <button id="resetBtn">⤺ Volver</button>
+    </div>
+
+  </div><!-- /book-wrap -->
+</div><!-- /scene -->
+
+<!-- Audio elements -->
+<audio id="pageSound" preload="auto">
+  <!-- Reemplaza con tu efecto de hoja (página) -->
+  <!-- <source src="audio/pagina.mp3" type="audio/mpeg"> -->
+</audio>
+
+<audio id="bgMusic" loop preload="none">
+  <!-- Reemplaza con tu pista arpa jarocha o instrumental -->
+  <!-- <source src="audio/fondo.mp3" type="audio/mpeg"> -->
+</audio>
 
 <script>
-const pages = document.querySelectorAll('.page');
-let current = 0;
+  (function(){
+    const pagesContainer = document.getElementById('pages');
+    const pageEls = Array.from(pagesContainer.querySelectorAll('.page'));
+    const btnNext = document.getElementById('btnNext');
+    const btnPrev = document.getElementById('btnPrev');
+    const resetBtn = document.getElementById('resetBtn');
+    const audioBtn = document.getElementById('audioBtn');
+    const pageSound = document.getElementById('pageSound');
+    const bgMusic = document.getElementById('bgMusic');
+    const bookWrap = document.getElementById('bookWrap');
+    const cover = document.getElementById('cover');
+    let current = 0; // how many pages have been flipped
+    let isTouching = false;
+    let touchStartX = 0, touchStartY = 0;
+    let audioEnabled = false;
 
-function nextPage() {
-  if (current < pages.length - 1) {
-    pages[current].classList.add('turning');
-    setTimeout(() => {
-      pages[current].classList.remove('turning');
-      pages[current].classList.add('flipped');
-      current++;
-    }, 400);
-  }
-}
+    // set dynamic z-index values (higher for earlier pages)
+    pageEls.forEach((el, idx) => {
+      // pages should stack: first visible page above later
+      el.style.zIndex = 100 - idx*2;
+    });
 
-function prevPage() {
-  if (current > 0) {
-    current--;
-    pages[current].classList.remove('flipped');
-  }
-}
+    function playPageSound(){
+      if(!audioEnabled) return;
+      try{
+        pageSound.currentTime = 0;
+        pageSound.play();
+      }catch(e){}
+    }
+    function toggleMusic(){
+      if(!audioEnabled){
+        audioEnabled = true;
+        // try to play background music
+        try{ bgMusic.volume = 0.28; bgMusic.play(); audioBtn.textContent = '🔊 Música ON'; }catch(e){ audioBtn.textContent = '🔈 Música (pulsa)' }
+      } else {
+        audioEnabled = false; bgMusic.pause(); audioBtn.textContent = '🔈 Música';
+      }
+    }
 
-document.getElementById('nextBtn').addEventListener('click', nextPage);
-document.getElementById('prevBtn').addEventListener('click', prevPage);
+    // page turning
+    function next(){
+      if(current >= pageEls.length) return;
+      const p = pageEls[current];
+      if(!p) return;
+      // animate turning
+      p.classList.add('turning');
+      playPageSound();
+      setTimeout(()=>{ p.classList.remove('turning'); p.classList.add('flipped'); current++;
+        // if went past last page -> close book (cover returns)
+        if(current === pageEls.length){
+          // close cover visually (rotate back slightly)
+          cover.style.transform = 'rotateY(-170deg)'; // already may be default; adjust subtle
+          // small delay to give final feel then fully close
+          setTimeout(()=>{ cover.style.transform = 'rotateY(0deg)'; }, 900);
+        }
+      }, 420);
+    }
 
-// Permitir usar flechas del teclado
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'ArrowRight') nextPage();
-  if (e.key === 'ArrowLeft') prevPage();
-});
+    function prev(){
+      if(current <= 0) return;
+      // revert previous page
+      const idx = current-1;
+      const p = pageEls[idx];
+      p.classList.remove('flipped');
+      playPageSound();
+      current--;
+    }
+
+    btnNext.addEventListener('click', next);
+    btnPrev.addEventListener('click', prev);
+
+    // reset/volver: unflip all
+    resetBtn.addEventListener('click', ()=>{
+      pageEls.forEach(el => el.classList.remove('flipped','turning'));
+      current = 0;
+      cover.style.transform = 'rotateY(0deg)';
+      // pause music optionally
+      // bgMusic.pause();
+    });
+
+    // top audio button: if first time, require a user interaction to enable audio on mobile
+    audioBtn.addEventListener('click', ()=>{
+      // if bgMusic has no source -> show small hint
+      const hasSrc = !!bgMusic.querySelector('source');
+      if(!hasSrc){
+        // still toggle audioEnabled so page sound may play if provided
+        audioEnabled = !audioEnabled;
+        audioBtn.textContent = audioEnabled ? '🔊 Sonidos ON' : '🔈 Sonidos OFF';
+        return alert('Recuerda: agrega tu archivo de música dentro del elemento <audio id=\"bgMusic\"> (src a tu mp3) para reproducir música de fondo.');
+      }
+      toggleMusic();
+    });
+
+    // clickable corners: clicking right half near right edge -> next, left near left -> prev
+    const bookRect = () => document.getElementById('book').getBoundingClientRect();
+    document.getElementById('bookWrap').addEventListener('click', (e)=>{
+      // for desktop clicks, detect area
+      const rect = bookRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const edge = Math.min(120, rect.width * 0.18); // margin area
+      // right corner (next)
+      if(x > rect.width - edge && Math.abs(y - rect.height/2) < rect.height*0.6){
+        next();
+      } else if(x < edge && Math.abs(y - rect.height/2) < rect.height*0.6){
+        prev();
+      }
+    });
+
+    // touch: support swipe
+    const bookElem = document.getElementById('book');
+    bookElem.addEventListener('touchstart', (e)=>{
+      isTouching = true;
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+      bookWrap.classList.add('touching');
+    });
+    bookElem.addEventListener('touchmove', (e)=>{
+      // optional: implement page dragging preview (complex) - keep simple for reliability
+    });
+    bookElem.addEventListener('touchend', (e)=>{
+      isTouching = false;
+      bookWrap.classList.remove('touching');
+      const touchEndX = (e.changedTouches && e.changedTouches[0]) ? e.changedTouches[0].clientX : touchStartX;
+      const dx = touchEndX - touchStartX;
+      const threshold = Math.max(30, window.innerWidth * 0.04);
+      if(dx < -threshold) next(); // swipe left = next
+      else if(dx > threshold) prev(); // swipe right = prev
+    });
+
+    // keyboard navigation
+    document.addEventListener('keydown', (e)=>{
+      if(e.key === 'ArrowRight') next();
+      if(e.key === 'ArrowLeft') prev();
+    });
+
+    // small UX: show hint to click audio if sources absent
+    // (Developers: ensure to insert audio <source> tags inside the audio elements)
+  })();
 </script>
 
 </body>
