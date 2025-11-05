@@ -5,44 +5,59 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Libro Doble Página — Henia Cisneros</title>
 <style>
+:root {
+  --cover-color:#4b2c28;
+  --cover-highlight:#6b3e36;
+  --gold:#d4af37;
+  --page-color:#fdf6e3;
+  --page-edge:#e5d6bf;
+  --text-color:#3b2d26;
+  --shadow: rgba(0,0,0,0.35);
+}
+
 body {
-  margin:0; padding:0; height:100vh; display:flex; justify-content:center; align-items:center;
-  background: linear-gradient(160deg,#7b5a3e,#b88b5a);
+  margin:0; padding:0; height:100vh;
+  display:flex; justify-content:center; align-items:center;
+  background: linear-gradient(135deg,#8c5e42,#c19b6e);
   font-family: Georgia, serif;
 }
 
 .book-wrap {
-  width:90vw; max-width:1100px; height:70vh; perspective:2000px; display:flex; justify-content:center; align-items:center;
+  width:90vw; max-width:1100px; height:75vh; perspective:2500px;
+  display:flex; justify-content:center; align-items:center; position:relative;
 }
 
 .book {
-  width:90%; height:100%; position:relative; transform-style: preserve-3d; display:flex; justify-content:center;
+  width:90%; height:100%; position:relative; transform-style: preserve-3d;
+  display:flex; justify-content:center; align-items:center;
 }
 
 .page {
-  width:50%; height:100%; background: linear-gradient(180deg,#fdf6e3,#f6eadc);
-  box-shadow:0 8px 20px rgba(0,0,0,0.3); border-radius:10px; overflow:hidden; position:absolute; top:0;
+  width:50%; height:100%; background:var(--page-color);
+  box-shadow:0 6px 20px var(--shadow); border-radius:10px;
+  overflow:hidden; position:absolute; top:0;
   display:flex; flex-direction:row; align-items:center; justify-content:space-around;
-  transition: transform 0.7s ease, z-index 0.7s ease;
   transform-origin:left center;
+  transition: transform 0.8s ease, z-index 0.8s ease;
 }
 
 .page.right { left:50%; transform-origin:right center; }
-.page.flipped { transform: rotateY(-180deg); z-index:0; }
 
 .page img { width:40%; height:auto; object-fit:cover; border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,0.2);}
-.page .text { width:15%; text-align:center; font-size:1rem; color:#3b2d26; }
+.page .text { width:15%; text-align:center; font-size:1rem; color:var(--text-color); }
 
 .cover, .backcover {
-  position:absolute; width:50%; height:100%; top:0; background:linear-gradient(180deg,#4b2c28,#6b3e36);
-  color:#d4af37; display:flex; flex-direction:column; justify-content:center; align-items:center; border-radius:10px;
-  font-weight:bold; font-size:1.8rem; text-align:center; padding:20px; box-shadow:0 10px 30px rgba(0,0,0,0.4);
+  position:absolute; width:50%; height:100%; top:0;
+  background:linear-gradient(180deg,var(--cover-color),var(--cover-highlight));
+  color:var(--gold); display:flex; flex-direction:column; justify-content:center; align-items:center;
+  border-radius:10px; font-weight:bold; font-size:1.8rem; text-align:center; padding:20px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.4);
 }
 .cover { left:0; transform-origin:left center; }
 .backcover { right:0; transform-origin:right center; }
 
 .controls { position:absolute; bottom:20px; display:flex; gap:15px; }
-button { padding:10px 16px; border:none; border-radius:8px; background:#d4af37; color:#fff; font-weight:bold; cursor:pointer; }
+button { padding:10px 16px; border:none; border-radius:8px; background:var(--gold); color:#fff; font-weight:bold; cursor:pointer; }
 
 @media(max-width:720px){
   .page img { width:35%; }
@@ -55,24 +70,27 @@ button { padding:10px 16px; border:none; border-radius:8px; background:#d4af37; 
 <div class="book-wrap">
   <div class="book">
     <!-- Portada -->
-    <div class="cover">Henia Cisneros<br><span style="font-size:1rem;font-weight:normal;">Un día lleno de cariño y celebración</span></div>
+    <div class="cover" id="cover">Henia Cisneros<br><span style="font-size:1rem;font-weight:normal;">Un día lleno de cariño y celebración</span></div>
     
-    <!-- Doble Página 1 -->
+    <!-- Doble Páginas -->
     <div class="page left" data-index="0">
       <img src="img/pagina1_izq.jpg" alt="Foto izquierda">
       <div class="text">Querida Henia, disfrutando momentos especiales</div>
       <img src="img/pagina1_der.jpg" alt="Foto derecha">
     </div>
-
-    <!-- Doble Página 2 -->
     <div class="page left" data-index="1">
       <img src="img/pagina2_izq.jpg" alt="Foto izquierda">
       <div class="text">Recuerdos que siempre brillan</div>
       <img src="img/pagina2_der.jpg" alt="Foto derecha">
     </div>
+    <div class="page left" data-index="2">
+      <img src="img/pagina3_izq.jpg" alt="Foto izquierda">
+      <div class="text">Momentos de alegría y amor</div>
+      <img src="img/pagina3_der.jpg" alt="Foto derecha">
+    </div>
 
     <!-- Contraportada -->
-    <div class="backcover">Fin del libro</div>
+    <div class="backcover" id="backcover">Con cariño,<br>Manuel</div>
   </div>
 
   <div class="controls">
@@ -81,25 +99,100 @@ button { padding:10px 16px; border:none; border-radius:8px; background:#d4af37; 
   </div>
 </div>
 
+<!-- Audio -->
+<audio id="pageSound" preload="auto">
+  <source src="https://www.soundjay.com/books/page-turn-4.mp3" type="audio/mpeg">
+</audio>
+<audio id="bgMusic" preload="auto" loop>
+  <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_efc06752a0.mp3?filename=soft-piano-ambient-112191.mp3" type="audio/mpeg">
+</audio>
+
 <script>
-const pages = document.querySelectorAll('.page');
+const pages = Array.from(document.querySelectorAll('.page'));
+const cover = document.getElementById('cover');
+const backcover = document.getElementById('backcover');
+const nextBtn = document.getElementById('nextBtn');
+const prevBtn = document.getElementById('prevBtn');
+const pageSound = document.getElementById('pageSound');
+const bgMusic = document.getElementById('bgMusic');
+
 let current = 0;
+const total = pages.length;
 
-document.getElementById('nextBtn').addEventListener('click', () => {
-  if(current < pages.length){
-    pages[current].classList.add('flipped');
+// Inicializa contraportada cerrada
+backcover.style.transform = 'rotateY(180deg)';
+
+function playSound(){
+  pageSound.currentTime=0; pageSound.play().catch(()=>{});
+}
+
+// Siguiente página
+function nextPage(){
+  if(current<total){
+    const page = pages[current];
+    page.style.zIndex = 2000;
+    page.style.transform = 'rotateY(-180deg)';
+    playSound();
     current++;
+    if(current === total){
+      backcover.style.transform = 'rotateY(0deg)';
+      cover.style.transform = 'rotateY(0deg)';
+    }
   }
+}
+
+// Página anterior
+function prevPage(){
+  if(current>0){
+    current--;
+    const page = pages[current];
+    page.style.zIndex = 1000;
+    page.style.transform = 'rotateY(0deg)';
+    playSound();
+    if(current===0){
+      cover.style.transform='rotateY(0deg)';
+      backcover.style.transform='rotateY(180deg)';
+    } else {
+      cover.style.transform='rotateY(-120deg)';
+    }
+  }
+}
+
+nextBtn.addEventListener('click', nextPage);
+prevBtn.addEventListener('click', prevPage);
+
+// Click en libro para pasar página
+document.querySelector('.book-wrap').addEventListener('click', e=>{
+  const rect = e.currentTarget.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  if(x>rect.width*0.6) nextPage();
+  else if(x<rect.width*0.4) prevPage();
 });
 
-document.getElementById('prevBtn').addEventListener('click', () => {
-  if(current > 0){
-    current--;
-    pages[current].classList.remove('flipped');
-  }
+// Swipe en móvil
+let startX=0, moved=false;
+const bookWrap=document.querySelector('.book-wrap');
+bookWrap.addEventListener('touchstart', e=>{ startX=e.touches[0].clientX; moved=false; });
+bookWrap.addEventListener('touchmove', e=>{ moved=true; });
+bookWrap.addEventListener('touchend', e=>{
+  const dx = e.changedTouches[0].clientX - startX;
+  if(Math.abs(dx)>30){
+    if(dx<0) nextPage();
+    else prevPage();
+  } else if(!moved) nextPage();
 });
+
+// Auto-play música
+bgMusic.volume=0.22;
+bgMusic.play().catch(()=>{});
+
+// Auto abrir portada tras 1.5s
+setTimeout(()=>{
+  cover.style.transition='transform 1s ease';
+  cover.style.transform='rotateY(-140deg)';
+  playSound();
+},1500);
 </script>
 
 </body>
 </html>
-
