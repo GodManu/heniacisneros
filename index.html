@@ -229,28 +229,37 @@
   let audioOn = false;
   const total = pageEls.length;
 
-  // make sure cover/backcover + pages share same size: ensure they match book client rect
+  // Sync sizing so cover/pages/backcover share exact box (helps avoid tiny misalignment)
   function syncSizing(){
     const book = document.getElementById('book');
     const r = book.getBoundingClientRect();
-    // Force cover/backcover/pages to the same CSS size by inline styles (helps some browsers)
     [cover, backcover, pagesContainer].forEach(el=>{
       el.style.width = r.width + 'px';
       el.style.height = r.height + 'px';
     });
     pageEls.forEach(p=>{ p.style.width = r.width + 'px'; p.style.height = r.height + 'px'; });
   }
-  // initial sizing sync and on resize
   setTimeout(syncSizing, 40);
   window.addEventListener('resize', syncSizing);
 
-  // initialize stacking order so page 0 is topmost
-  function setStack(){
-    pageEls.forEach((p,i) => {
-      p.style.zIndex = (1000 - i*2).toString();
+  // Robust z-index updater: flipped pages behind, unflipped above
+  function updateZIndices(){
+    pageEls.forEach((p, i) => {
+      if(p.classList.contains('flipped')){
+        // flipped pages go to low z so they sit behind
+        p.style.zIndex = 10 + i; // increasing so earlier flipped are slightly lower
+      } else {
+        // unflipped pages go above, in descending order so lower index is on top
+        p.style.zIndex = 2000 - i*2;
+      }
     });
+    // ensure cover is above unflipped pages while closed/opening
+    cover.style.zIndex = 3000;
+    backcover.style.zIndex = 2500;
   }
-  setStack();
+
+  // initial z-index setup
+  updateZIndices();
 
   // play page sound only if audioOn true
   function playPageSound(){
@@ -274,34 +283,32 @@
 
   // flip next page
   function flipNext(){
-    if(current >= total){
-      // if past last page, show backcover (closed)
-      pageEls.forEach((p,i)=> p.classList.add('flipped'));
-      // ensure backcover visible and cover closed
+    // if we're already past last page, show backcover and return
+    if(current >= pageEls.length){
+      pageEls.forEach((p)=> p.classList.add('flipped'));
       backcover.style.transform = 'rotateY(0deg)';
       cover.style.transform = 'rotateY(0deg)';
+      updateZIndices();
       return;
     }
     const page = pageEls[current];
     if(!page) return;
-    // bump z-index to top for realistic turning
-    page.style.zIndex = 2000;
+    // bring the page to top for animation
+    page.style.zIndex = 5000;
     page.classList.add('turning');
-    playPageSound();
-    // slight delay ensures cover + page sequence feels natural (cover partly moves then page flips)
-    // keep cover slightly open if this is first flip
+    // small cover movement on first flip so it looks natural
     if(current === 0){
       cover.style.transition = 'transform 520ms cubic-bezier(.2,.9,.25,1)';
       cover.style.transform = 'rotateY(-130deg)';
     }
+    playPageSound();
     setTimeout(()=>{
       page.classList.remove('turning');
       page.classList.add('flipped');
-      // after flipped, put it behind others
-      page.style.zIndex = (10 + current).toString();
       current++;
-      // if reached end show backcover
-      if(current === total){
+      updateZIndices();
+      // if reached end, show backcover after small delay
+      if(current === pageEls.length){
         setTimeout(()=>{ backcover.style.transform = 'rotateY(0deg)'; cover.style.transform = 'rotateY(0deg)'; }, 380);
       }
     }, 440);
@@ -313,31 +320,27 @@
     const idx = current - 1;
     const page = pageEls[idx];
     if(!page) return;
-    // bring to front
-    page.style.zIndex = 2000;
-    // unflip
+    // temporarily raise z so unflip looks natural
+    page.style.zIndex = 5000;
     page.classList.remove('flipped');
     playPageSound();
-    setTimeout(()=>{ setStack(); }, 460);
+    setTimeout(()=>{ updateZIndices(); }, 460);
     current--;
     // hide backcover if visible
     backcover.style.transform = 'rotateY(180deg)';
-    // reset cover if we returned to start
-    if(current === 0){
-      cover.style.transform = 'rotateY(0deg)';
-    } else {
-      cover.style.transform = 'rotateY(-140deg)';
-    }
+    // adjust cover position
+    if(current === 0) cover.style.transform = 'rotateY(0deg)';
+    else cover.style.transform = 'rotateY(-140deg)';
   }
 
-  // controls
+  // attach UI
   nextBtn.addEventListener('click', flipNext);
   prevBtn.addEventListener('click', flipPrev);
 
   resetBtn.addEventListener('click', ()=>{
     pageEls.forEach(p => { p.classList.remove('flipped','turning'); });
     current = 0;
-    setStack();
+    updateZIndices();
     backcover.style.transform = 'rotateY(180deg)';
     cover.style.transform = 'rotateY(0deg)';
   });
@@ -349,7 +352,7 @@
     if(!audioOn){ try{ bgMusic.pause(); audioBtn.textContent='🔈 Música'; }catch(e){} }
   });
 
-  // Click on bookWrap: detect edges or center
+  // click detection on bookWrap
   bookWrap.addEventListener('click', (ev)=>{
     const rect = ev.currentTarget.getBoundingClientRect();
     const x = ev.clientX - rect.left;
@@ -359,7 +362,7 @@
     else flipNext();
   });
 
-  // touch: swipe detection
+  // touch: swipe detection (mobile)
   let startX = 0, startY = 0, moved = false;
   bookWrap.addEventListener('touchstart', (e)=>{
     const t = e.touches[0];
@@ -382,18 +385,18 @@
     }
   }, {passive:true});
 
-  // keyboard
+  // keyboard nav
   document.addEventListener('keydown', (e)=>{
     if(e.key === 'ArrowRight') flipNext();
     if(e.key === 'ArrowLeft') flipPrev();
   });
 
-  // initial: hide backcover behind (rotated)
+  // initial: hide backcover and ensure sizes match
   backcover.style.transform = 'rotateY(180deg)';
+  updateZIndices();
 
   // Automatic opening sequence after 2.5s (cover rotates slightly then settles)
   function autoOpen(){
-    // small staged animation for realistic opening
     cover.style.transition = 'transform 700ms cubic-bezier(.2,.9,.25,1)';
     setTimeout(()=>{ cover.style.transform = 'rotateY(-120deg)'; playPageSound(); }, 60);
     setTimeout(()=>{ cover.style.transform = 'rotateY(-150deg)'; }, 380);
@@ -415,17 +418,17 @@
   setTimeout(()=>{
     syncSizing();
     autoOpen();
-    // small page sound to signal opening
     try{ if(pageSound && pageSound.querySelector('source')) { pageSound.currentTime = 0; pageSound.play().catch(()=>{}); } }catch(e){}
     tryAutoPlayMusic();
   }, 2500);
 
-  // refresh page list if needed (dev use)
-  function refreshPages(){ pageEls = Array.from(document.querySelectorAll('.page')); setStack(); }
+  // if DOM changes or resize, refresh pages and stack
+  function refreshPages(){ pageEls = Array.from(document.querySelectorAll('.page')); updateZIndices(); }
   window.addEventListener('resize', ()=>{ syncSizing(); refreshPages(); });
 
-  // developer note
-  console.log('Reemplaza img/pagina*.jpg y audio/pagina.mp3 audio/fondo.mp3 si lo deseas.');
+  // Expose some functions for debugging in console if needed
+  window._bookDebug = { flipNext, flipPrev, updateZIndices, syncSizing };
+  console.log('Patch applied: z-index & flip logic strengthened. Reemplaza img/pagina*.jpg y audio si quieres.');
 })();
 </script>
 </body>
