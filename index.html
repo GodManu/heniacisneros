@@ -1,145 +1,86 @@
 <!doctype html>
 <html lang="es">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Henia Cisneros — Libro Elegante</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Henia Cisneros — Libro</title>
 <style>
 :root{
-  --cover-dark:#3a1f2c; /* cuero elegante oscuro */
-  --cover-light:#5b3245;
-  --paper:#fbf6ec;
-  --paper-edge:#e5d6bf;
-  --gold:#c9a84f;
+  --desk-1:#7b5a3e; --desk-2:#b88b5a; /* madera cálida */
+  --cover-dark:#4b2c28; --cover-mid:#6b3e36;
+  --gold:#d4af37;
+  --paper:#fdf6e3;
+  --paper-edge:#e6d7c3;
   --stitch:#d2b27a;
-  --shadow: rgba(0,0,0,0.5);
-  --desk-1:#a17c5a;
-  --desk-2:#8a6242;
+  --shadow: rgba(0,0,0,0.35);
 }
 
-html,body{
-  height:100%;
-  margin:0;
-  font-family: 'Cormorant Garamond', Georgia, serif;
-  background: linear-gradient(180deg,var(--desk-1),var(--desk-2));
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  overflow:hidden;
-  color:#2f241f;
-}
+html,body{height:100%;margin:0;font-family:Georgia,'Times New Roman',serif;
+  background: linear-gradient(160deg,var(--desk-1),var(--desk-2));
+  display:flex;align-items:center;justify-content:center;overflow:hidden;color:#3b2d26;}
 
 .scene{
-  width:94vw; max-width:1100px; height:84vh; max-height:760px;
-  border-radius:14px;
-  box-shadow:0 30px 90px rgba(0,0,0,0.6), inset 0 6px 24px rgba(255,255,255,0.02);
-  background: linear-gradient(180deg, rgba(0,0,0,0.06), rgba(255,255,255,0.02));
-  position:relative; 
-  padding:28px; 
-  display:flex; 
-  align-items:center; 
-  justify-content:center;
+  width:94vw; max-width:1100px; height:84vh; max-height:760px; border-radius:14px;
+  position:relative; display:flex; align-items:center; justify-content:center;
+  box-shadow: 0 30px 90px rgba(0,0,0,0.6), inset 0 6px 24px rgba(255,255,255,0.05);
 }
 
-.book-wrap{
-  width:680px; max-width:86%; height:520px; max-height:86%;
-  perspective:3300px; 
-  display:flex; 
-  align-items:center; 
-  justify-content:center; 
-  position:relative; 
-  transform: translateY(8%);
-}
+.book-wrap{ width:680px; max-width:86%; height:520px; max-height:86%; perspective:3500px; position:relative; }
 
-.book-shadow{
-  position:absolute; bottom:4%; width:58%; height:22px;
-  background:radial-gradient(closest-side, rgba(0,0,0,0.55), transparent); 
-  filter:blur(18px); z-index:1;
-}
+.book-shadow { position:absolute; bottom:2%; width:60%; height:22px; background:radial-gradient(closest-side, rgba(0,0,0,0.5), transparent); filter:blur(18px); z-index:1;}
 
-.book{
-  width:540px; height:420px; 
-  position:relative; transform-style:preserve-3d; 
-  z-index:10; display:block;
-}
+.book{ width:540px; height:420px; position:relative; transform-style:preserve-3d; z-index:10; display:block; }
 
 .cover, .backcover{
-  position:absolute; left:0; top:0; width:100%; height:100%;
-  border-radius:10px; box-sizing:border-box;
-  display:flex; align-items:center; justify-content:center; text-align:center;
-  padding:30px;
-  backface-visibility:hidden; transform-style:preserve-3d; z-index:60;
-  will-change: transform;
-  transform: translateZ(0.01px);
+  position:absolute; left:0; top:0; width:100%; height:100%; border-radius:12px; box-sizing:border-box; display:flex; align-items:center; justify-content:center; text-align:center; padding:30px;
+  backface-visibility:hidden; transform-style:preserve-3d;
 }
 
 .cover{
-  background: linear-gradient(180deg, var(--cover-dark), var(--cover-light));
-  box-shadow: 0 18px 60px rgba(0,0,0,0.6), inset 0 8px 26px rgba(255,255,255,0.02);
-  border: 3px solid rgba(0,0,0,0.38);
-  transform-origin: left center;
+  background: linear-gradient(180deg, var(--cover-dark), var(--cover-mid));
+  border:3px solid rgba(0,0,0,0.38); 
+  box-shadow: 0 18px 60px rgba(0,0,0,0.6), inset 0 8px 26px rgba(255,255,255,0.03);
+  transform-origin:left center;
+  font-family:'Cormorant Garamond', Georgia, serif;
   position:relative; overflow:visible;
-  font-weight:700;
 }
-
 .cover .title{
-  color:var(--gold); font-size:2rem; letter-spacing:1px; position:relative;
-  text-shadow: 0 1px 0 rgba(255,255,255,0.05), 0 2px 6px rgba(0,0,0,0.65), 0 -1px 0 rgba(0,0,0,0.12);
-  transform: translateZ(6px);
+  color:var(--gold); font-size:2rem; letter-spacing:1px; font-weight:700; text-shadow:0 1px 0 rgba(0,0,0,0.15);
 }
-
 .cover .subtitle{
-  margin-top:12px;
-  font-size:1rem;
-  color: #e2cfa0;
+  color:#f5e5c1; font-size:1rem; margin-top:12px; font-style:italic;
 }
-
-.cover::before{
-  content:'';
-  position:absolute; inset:8px;
-  border-radius:8px; pointer-events:none; 
-  box-shadow: inset 0 0 0 2px rgba(0,0,0,0.12);
-}
+.cover::before{ content:''; position:absolute; inset:6px; border-radius:10px; box-shadow: inset 0 0 0 2px rgba(0,0,0,0.15); }
 
 .backcover{
   transform-origin:right center;
   transform: rotateY(180deg);
-  background: linear-gradient(180deg,var(--cover-light),var(--cover-dark));
+  background: linear-gradient(180deg,var(--cover-mid),var(--cover-dark));
   border:3px solid rgba(0,0,0,0.28);
   box-shadow: 0 10px 40px rgba(0,0,0,0.55), inset 0 6px 18px rgba(255,255,255,0.02);
   position:relative;
 }
-
-.stitch{
-  position:absolute; right:22px; top:12%; height:76%; width:8px; 
-  display:flex; flex-direction:column; align-items:center; justify-content:space-between; z-index:120;
-}
-
+.stitch { position:absolute; right:22px; top:12%; height:76%; width:8px; display:flex; flex-direction:column; align-items:center; justify-content:space-between; z-index:120; }
 .stitch span{ display:block; width:6px; height:6px; background:var(--stitch); border-radius:2px; box-shadow:0 2px 2px rgba(0,0,0,0.25); transform:rotate(12deg); opacity:0.95 }
 
 .pages{ position:absolute; left:0; top:0; width:100%; height:100%; transform-style:preserve-3d; pointer-events:auto; z-index:50; }
 
 .page{
-  position:absolute; left:0; top:0; width:100%; height:100%; border-radius:6px; box-sizing:border-box;
+  position:absolute; left:0; top:0; width:100%; height:100%; border-radius:8px; box-sizing:border-box;
   background: linear-gradient(180deg, var(--paper), #f6eadc);
-  border:1px solid rgba(0,0,0,0.06);
-  padding:20px; overflow:hidden; transform-origin:left center; backface-visibility:hidden;
-  transition: transform 760ms cubic-bezier(.2,.9,.25,1), box-shadow 360ms ease;
+  border:1px solid rgba(0,0,0,0.06); padding:20px; overflow:hidden;
+  transform-origin:left center; backface-visibility:hidden;
+  transition: transform 750ms cubic-bezier(.2,.9,.25,1), box-shadow 400ms ease;
   display:flex; align-items:center; justify-content:center; will-change: transform;
 }
-
 .page::after{
   content:''; position:absolute; right:-12px; top:10px; bottom:10px; width:14px; border-radius:3px;
-  background: linear-gradient(180deg, var(--paper-edge), rgba(0,0,0,0.02)); 
-  box-shadow: inset 0 0 6px rgba(0,0,0,0.06);
+  background: linear-gradient(180deg, var(--paper-edge), rgba(0,0,0,0.02)); box-shadow: inset 0 0 6px rgba(0,0,0,0.06);
 }
-
-.inner{
-  width:94%; height:92%; border-radius:4px; padding:16px; box-sizing:border-box;
-  display:flex; align-items:center; justify-content:center; text-align:center; color:#3b2d26; font-size:1.02rem; line-height:1.55;
+.inner{ width:92%; height:90%; border-radius:4px; padding:16px; box-sizing:border-box;
   background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.01));
+  display:flex; align-items:center; justify-content:center; text-align:center; color:#3b2d26; font-size:1rem; line-height:1.55;
 }
-
 .page img{ width:100%; height:100%; object-fit:cover; border-radius:6px; box-shadow:0 6px 18px rgba(0,0,0,0.16) inset; }
 
 .page.turning{ transform: rotateY(-92deg) translateX(6px) scale(1.01); box-shadow: -28px 14px 70px rgba(0,0,0,0.5); z-index:9999 !important; }
@@ -160,45 +101,50 @@ html,body{
 </style>
 </head>
 <body>
-<div class="scene">
-  <div class="book-wrap" id="bookWrap">
-    <div class="book-shadow" aria-hidden="true"></div>
+<div class="scene" id="scene">
 
-    <div class="book" id="book">
-      <div class="cover" id="cover">
-        <div>
-          <div class="title">Henia Cisneros</div>
-          <div class="subtitle">Por un día lleno de cariño y alegría</div>
-        </div>
-      </div>
-
-      <div class="pages" id="pages">
-        <div class="page" data-index="0"><div class="inner"><img src="img/pagina1.jpg" alt="Foto 1"></div></div>
-        <div class="page" data-index="1"><div class="inner"><p>Querida Henia, gracias por tu amor y por todo lo que inspiras.</p></div></div>
-        <div class="page" data-index="2"><div class="inner"><img src="img/pagina2.jpg" alt="Foto 2"></div></div>
-        <div class="page" data-index="3"><div class="inner"><img src="img/pagina3.jpg" alt="Foto 3"></div></div>
-        <div class="page" data-index="4"><div class="inner"><p>Que nunca falte en tu vida la alegría, la paz y la sonrisa que siempre te acompaña.</p><p style="margin-top:20px; font-weight:700;">Con cariño,<br>Manuel</p></div></div>
-      </div>
-
-      <div class="backcover" id="backcover">
-        <div class="stitch" aria-hidden="true">
-          <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
-        </div>
+<div class="book-wrap" id="bookWrap">
+  <div class="book-shadow" aria-hidden="true"></div>
+  <div class="book" id="book">
+    <!-- COVER -->
+    <div class="cover" id="cover">
+      <div>
+        <div class="title">Henia Cisneros</div>
+        <div class="subtitle">Un día lleno de cariño y celebración</div>
       </div>
     </div>
 
-    <div class="controls">
-      <button class="btn" id="prevBtn">⟵ Atrás</button>
-      <button class="btn" id="nextBtn">Siguiente ⟶</button>
+    <!-- PAGES -->
+    <div class="pages" id="pages">
+      <div class="page" data-index="0"><div class="inner"><img src="img/pagina1.jpg" alt="Foto 1"></div></div>
+      <div class="page" data-index="1"><div class="inner"><p><strong>Querida Henia,</strong><br><br>Hoy celebramos tu historia y tu alegría, agradeciendo siempre la vida y el amor que compartes.</p></div></div>
+      <div class="page" data-index="2"><div class="inner"><img src="img/pagina2.jpg" alt="Foto 2"></div></div>
+      <div class="page" data-index="3"><div class="inner"><img src="img/pagina3.jpg" alt="Foto 3"></div></div>
+      <div class="page" data-index="4"><div class="inner"><p>Que nunca falte la sonrisa y la paz en tu vida.<br><strong>Con cariño,<br>Manuel</strong></p></div></div>
     </div>
 
-    <div class="top-controls">
-      <button id="audioBtn">🔈 Música</button>
-      <button id="resetBtn">⤺ Volver</button>
+    <!-- BACK COVER -->
+    <div class="backcover" id="backcover">
+      <div class="stitch" aria-hidden="true">
+        <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+      </div>
     </div>
   </div>
+
+  <!-- Controls -->
+  <div class="controls" role="toolbar" aria-label="Navegación del libro">
+    <button class="btn" id="prevBtn">⟵ Atrás</button>
+    <button class="btn" id="nextBtn">Siguiente ⟶</button>
+  </div>
+
+  <div class="top-controls">
+    <button id="audioBtn">🔈 Música</button>
+    <button id="resetBtn">⤺ Volver</button>
+  </div>
+</div>
 </div>
 
+<!-- Audio -->
 <audio id="pageSound" preload="auto">
   <source src="https://www.soundjay.com/books/page-turn-4.mp3" type="audio/mpeg">
 </audio>
@@ -208,124 +154,85 @@ html,body{
 
 <script>
 (function(){
-  const pagesContainer = document.getElementById('pages');
-  let pageEls = Array.from(pagesContainer.querySelectorAll('.page'));
-  const cover = document.getElementById('cover');
-  const backcover = document.getElementById('backcover');
-  const nextBtn = document.getElementById('nextBtn');
-  const prevBtn = document.getElementById('prevBtn');
-  const resetBtn = document.getElementById('resetBtn');
-  const audioBtn = document.getElementById('audioBtn');
-  const pageSound = document.getElementById('pageSound');
-  const bgMusic = document.getElementById('bgMusic');
-  const bookWrap = document.getElementById('bookWrap');
-  let current = 0;
-  let audioOn = false;
-  const total = pageEls.length;
-  let isAnimating = false;
+const pagesContainer=document.getElementById('pages');
+let pageEls=Array.from(pagesContainer.querySelectorAll('.page'));
+const cover=document.getElementById('cover');
+const backcover=document.getElementById('backcover');
+const nextBtn=document.getElementById('nextBtn');
+const prevBtn=document.getElementById('prevBtn');
+const resetBtn=document.getElementById('resetBtn');
+const audioBtn=document.getElementById('audioBtn');
+const pageSound=document.getElementById('pageSound');
+const bgMusic=document.getElementById('bgMusic');
+const bookWrap=document.getElementById('bookWrap');
+let current=0;
+let audioOn=false;
+const total=pageEls.length;
 
-  function syncSizing(){
-    const book = document.getElementById('book');
-    const r = book.getBoundingClientRect();
-    [cover, backcover, pagesContainer].forEach(el=>{
-      el.style.width = r.width + 'px';
-      el.style.height = r.height + 'px';
-    });
-    pageEls.forEach(p=>{ p.style.width = r.width + 'px'; p.style.height = r.height + 'px'; });
-  }
-  setTimeout(syncSizing, 40);
-  window.addEventListener('resize', syncSizing);
+function syncSizing(){
+  const book=document.getElementById('book');
+  const r=book.getBoundingClientRect();
+  [cover,backcover,pagesContainer].forEach(el=>{el.style.width=r.width+'px'; el.style.height=r.height+'px';});
+  pageEls.forEach(p=>{p.style.width=r.width+'px'; p.style.height=r.height+'px';});
+}
+setTimeout(syncSizing,40);
+window.addEventListener('resize',syncSizing);
 
-  function setStack(){
-    pageEls.forEach((p,i) => { p.style.zIndex = (1000 - i*2).toString(); });
-  }
-  setStack();
+function setStack(){pageEls.forEach((p,i)=>{p.style.zIndex=(1000-i*2).toString();});}
+setStack();
 
-  function playPageSound(){ if(audioOn){ pageSound.currentTime=0; pageSound.play().catch(()=>{}); } }
-  function tryPlayBg(){ if(audioOn){ bgMusic.volume=0.22; bgMusic.play().then(()=> audioBtn.textContent='🔊 Música ON').catch(()=>{ audioBtn.textContent='🔈 Música'; }); } }
+function playPageSound(){try{if(pageSound && pageSound.querySelector('source') && audioOn){pageSound.currentTime=0; pageSound.play().catch(()=>{});}}catch(e){}}
+function tryPlayBg(){try{if(bgMusic && bgMusic.querySelector('source') && audioOn){bgMusic.volume=0.22; bgMusic.play().then(()=>audioBtn.textContent='🔊 Música ON').catch(()=>{audioBtn.textContent='🔈 Música (pulsa)'});}else{audioBtn.textContent=(audioOn?'🔊 Sonidos ON':'🔈 Música');}}catch(e){}}
 
-  function flipNext(){
-    if(isAnimating) return;
-    if(current>=total){ backcover.style.transform='rotateY(0deg)'; cover.style.transform='rotateY(0deg)'; return; }
-    const page = pageEls[current];
-    if(!page) return;
-    isAnimating=true;
-    page.style.zIndex=9999;
-    page.classList.add('turning');
-    playPageSound();
-    if(current===0){ cover.style.transition='transform 520ms cubic-bezier(.2,.9,.25,1)'; cover.style.transform='rotateY(-130deg)'; }
-    setTimeout(()=>{
-      page.classList.remove('turning');
-      page.classList.add('flipped');
-      page.style.zIndex = (10+current).toString();
-      current++;
-      if(current===total){ setTimeout(()=>{ backcover.style.transform='rotateY(0deg)'; cover.style.transform='rotateY(0deg)'; }, 380); }
-      isAnimating=false;
-    },440);
-  }
+function flipNext(){
+  if(current>=total){pageEls.forEach((p,i)=>p.classList.add('flipped')); cover.style.transform='rotateY(0deg)'; backcover.style.transform='rotateY(0deg)'; return;}
+  const page=pageEls[current];
+  if(!page)return;
+  page.style.zIndex=2000;
+  page.classList.add('turning');
+  playPageSound();
+  if(current===0){cover.style.transition='transform 520ms cubic-bezier(.2,.9,.25,1)'; cover.style.transform='rotateY(-130deg)';}
+  setTimeout(()=>{page.classList.remove('turning'); page.classList.add('flipped'); page.style.zIndex=(10+current).toString(); current++; if(current===total){setTimeout(()=>{backcover.style.transform='rotateY(0deg)'; cover.style.transform='rotateY(0deg)';},380);}},440);
+}
 
-  function flipPrev(){
-    if(isAnimating || current<=0) return;
-    const idx=current-1;
-    const page=pageEls[idx];
-    if(!page) return;
-    isAnimating=true;
-    page.style.zIndex=9999;
-    page.classList.remove('flipped');
-    playPageSound();
-    setTimeout(()=>{ setStack(); isAnimating=false; },460);
-    current--;
-    backcover.style.transform='rotateY(180deg)';
-    cover.style.transform = (current===0? 'rotateY(0deg)' : 'rotateY(-140deg)');
-  }
-
-  nextBtn.addEventListener('click',flipNext);
-  prevBtn.addEventListener('click',flipPrev);
-
-  resetBtn.addEventListener('click',()=>{
-    pageEls.forEach(p => { p.classList.remove('flipped','turning'); });
-    current=0;
-    setStack();
-    backcover.style.transform='rotateY(180deg)';
-    cover.style.transform='rotateY(0deg)';
-  });
-
-  audioBtn.addEventListener('click',()=>{
-    audioOn=!audioOn; tryPlayBg();
-    if(!audioOn){ bgMusic.pause(); audioBtn.textContent='🔈 Música'; }
-  });
-
-  bookWrap.addEventListener('click',(ev)=>{
-    const rect=ev.currentTarget.getBoundingClientRect();
-    const x=ev.clientX-rect.left;
-    const edge=Math.max(40, rect.width*0.12);
-    if(x>rect.width-edge) flipNext();
-    else if(x<edge) flipPrev();
-    else flipNext();
-  });
-
-  let startX=0, startY=0, moved=false;
-  bookWrap.addEventListener('touchstart',(e)=>{ const t=e.touches[0]; startX=t.clientX; startY=t.clientY; moved=false; bookWrap.classList.add('touching'); },{passive:true});
-  bookWrap.addEventListener('touchmove',(e)=>{ moved=true; },{passive:true});
-  bookWrap.addEventListener('touchend',(e)=>{
-    bookWrap.classList.remove('touching');
-    const t=e.changedTouches[0]; const dx=t.clientX-startX; const dy=t.clientY-startY;
-    const absDx=Math.abs(dx), absDy=Math.abs(dy);
-    if(absDx>30 && absDx>absDy){ dx<0?flipNext():flipPrev(); }
-    else{ if(!moved) flipNext(); }
-  },{passive:true});
-
-  document.addEventListener('keydown',(e)=>{ if(e.key==='ArrowRight') flipNext(); if(e.key==='ArrowLeft') flipPrev(); });
-
+function flipPrev(){
+  if(current<=0)return;
+  const idx=current-1;
+  const page=pageEls[idx];
+  if(!page)return;
+  page.style.zIndex=2000;
+  page.classList.remove('flipped');
+  playPageSound();
+  setTimeout(()=>{setStack();},460);
+  current--;
   backcover.style.transform='rotateY(180deg)';
+  if(current===0){cover.style.transform='rotateY(0deg)';}else{cover.style.transform='rotateY(-140deg)';}
+}
 
-  function autoOpen(){
-    cover.style.transition='transform 700ms cubic-bezier(.2,.9,.25,1)';
-    setTimeout(()=>{ cover.style.transform='rotateY(-120deg)'; playPageSound(); },60);
-    setTimeout(()=>{ cover.style.transform='rotateY(-150deg)'; playPageSound(); },500);
-    setTimeout(()=>{ cover.style.transform='rotateY(0deg)'; },1000);
-  }
-  autoOpen();
+nextBtn.addEventListener('click',flipNext);
+prevBtn.addEventListener('click',flipPrev);
+resetBtn.addEventListener('click',()=>{pageEls.forEach(p=>{p.classList.remove('flipped','turning');});current=0; setStack(); backcover.style.transform='rotateY(180deg)'; cover.style.transform='rotateY(0deg)';});
+audioBtn.addEventListener('click',()=>{audioOn=!audioOn; tryPlayBg(); if(!audioOn){try{bgMusic.pause(); audioBtn.textContent='🔈 Música';}catch(e){}}});
+
+bookWrap.addEventListener('click',(ev)=>{
+  const rect=ev.currentTarget.getBoundingClientRect();
+  const x=ev.clientX-rect.left;
+  const edge=Math.max(40, rect.width*0.12);
+  if(x>rect.width-edge) flipNext();
+  else if(x<edge) flipPrev();
+  else flipNext();
+});
+
+let startX=0,startY=0,moved=false;
+bookWrap.addEventListener('touchstart',(e)=>{const t=e.touches[0]; startX=t.clientX; startY=t.clientY; moved=false; bookWrap.classList.add('touching');},{passive:true});
+bookWrap.addEventListener('touchmove',(e)=>{moved=true;},{passive:true});
+bookWrap.addEventListener('touchend',(e)=>{bookWrap.classList.remove('touching'); const t=e.changedTouches[0]; const dx=t.clientX-startX; const dy=t.clientY-startY; const absDx=Math.abs(dx),absDy=Math.abs(dy); if(absDx>30 && absDx>absDy){if(dx<0) flipNext(); else flipPrev();}else{if(!moved) flipNext();}}, {passive:true});
+
+document.addEventListener('keydown',(e)=>{if(e.key==='ArrowRight')flipNext(); if(e.key==='ArrowLeft')flipPrev();});
+backcover.style.transform='rotateY(180deg)';
+
+function autoOpen(){cover.style.transition='transform 700ms cubic-bezier(.2,.9,.25,1)'; setTimeout(()=>{cover.style.transform='rotateY(-120deg)'; playPageSound();},500); setTimeout(()=>{cover.style.transform='rotateY(-150deg)';},1000); setTimeout(()=>{cover.style.transform='rotateY(-140deg)';},1500);}
+setTimeout(()=>{syncSizing(); autoOpen(); try{if(pageSound && pageSound.querySelector('source')){pageSound.currentTime=0; pageSound.play().catch(()=>{});}}catch(e){} try{if(bgMusic && bgMusic.querySelector('source')){bgMusic.volume=0.22; bgMusic.play().then(()=>{audioOn=true; audioBtn.textContent='🔊 Música ON';}).catch(()=>{audioOn=false; audioBtn.textContent='🔈 Música';});}}catch(e){}},2000);
 })();
 </script>
 </body>
