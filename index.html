@@ -228,23 +228,42 @@ button:hover{ background:#f4f0e8; }
 
   function flipNext(){
     if(current < total){
+      // portada
       if(current===0) cover.classList.add('flipped');
-      pages[current].classList.add('flipped');
-      playPageSound();
-      current++;
-      if(current===total) backcover.classList.add('flipped');
-    }
-  }
 
-  function flipPrev(){
-    if(current>0){
-      current--;
-      pages[current].classList.remove('flipped');
+      // página actual
+      const page = pages[current];
+      page.style.zIndex = 2000 - current; // apila correctamente
+      page.classList.add('flipped');
       playPageSound();
-      if(current===0) cover.classList.remove('flipped');
-      backcover.classList.remove('flipped');
+
+      current++;
+
+      // si ya pasamos la última página, mostrar contraportada
+      if(current === total){
+        backcover.classList.add('flipped');
+        backcover.style.zIndex = 1; // siempre detrás de todo
+      }
     }
-  }
+}
+
+function flipPrev(){
+    if(current > 0){
+      current--;
+      const page = pages[current];
+      page.classList.remove('flipped');
+      page.style.zIndex = 2000 - current;
+      playPageSound();
+
+      // si regresamos a la portada, ocultar contraportada
+      if(current < total){
+        backcover.classList.remove('flipped');
+      }
+
+      if(current===0) cover.classList.remove('flipped');
+    }
+}
+
 
   nextBtn.addEventListener('click', flipNext);
   prevBtn.addEventListener('click', flipPrev);
