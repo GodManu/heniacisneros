@@ -1,239 +1,105 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Henia Cisneros — Libro</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Libro Doble Página — Henia Cisneros</title>
 <style>
-:root{
-  --desk-1:#7b5a3e; --desk-2:#b88b5a; /* madera cálida */
-  --cover-dark:#4b2c28; --cover-mid:#6b3e36;
-  --gold:#d4af37;
-  --paper:#fdf6e3;
-  --paper-edge:#e6d7c3;
-  --stitch:#d2b27a;
-  --shadow: rgba(0,0,0,0.35);
+body {
+  margin:0; padding:0; height:100vh; display:flex; justify-content:center; align-items:center;
+  background: linear-gradient(160deg,#7b5a3e,#b88b5a);
+  font-family: Georgia, serif;
 }
 
-html,body{height:100%;margin:0;font-family:Georgia,'Times New Roman',serif;
-  background: linear-gradient(160deg,var(--desk-1),var(--desk-2));
-  display:flex;align-items:center;justify-content:center;overflow:hidden;color:#3b2d26;}
-
-.scene{
-  width:94vw; max-width:1100px; height:84vh; max-height:760px; border-radius:14px;
-  position:relative; display:flex; align-items:center; justify-content:center;
-  box-shadow: 0 30px 90px rgba(0,0,0,0.6), inset 0 6px 24px rgba(255,255,255,0.05);
+.book-wrap {
+  width:90vw; max-width:1100px; height:70vh; perspective:2000px; display:flex; justify-content:center; align-items:center;
 }
 
-.book-wrap{ width:680px; max-width:86%; height:520px; max-height:86%; perspective:3500px; position:relative; }
-
-.book-shadow { position:absolute; bottom:2%; width:60%; height:22px; background:radial-gradient(closest-side, rgba(0,0,0,0.5), transparent); filter:blur(18px); z-index:1;}
-
-.book{ width:540px; height:420px; position:relative; transform-style:preserve-3d; z-index:10; display:block; }
-
-.cover, .backcover{
-  position:absolute; left:0; top:0; width:100%; height:100%; border-radius:12px; box-sizing:border-box; display:flex; align-items:center; justify-content:center; text-align:center; padding:30px;
-  backface-visibility:hidden; transform-style:preserve-3d;
+.book {
+  width:90%; height:100%; position:relative; transform-style: preserve-3d; display:flex; justify-content:center;
 }
 
-.cover{
-  background: linear-gradient(180deg, var(--cover-dark), var(--cover-mid));
-  border:3px solid rgba(0,0,0,0.38); 
-  box-shadow: 0 18px 60px rgba(0,0,0,0.6), inset 0 8px 26px rgba(255,255,255,0.03);
+.page {
+  width:50%; height:100%; background: linear-gradient(180deg,#fdf6e3,#f6eadc);
+  box-shadow:0 8px 20px rgba(0,0,0,0.3); border-radius:10px; overflow:hidden; position:absolute; top:0;
+  display:flex; flex-direction:row; align-items:center; justify-content:space-around;
+  transition: transform 0.7s ease, z-index 0.7s ease;
   transform-origin:left center;
-  font-family:'Cormorant Garamond', Georgia, serif;
-  position:relative; overflow:visible;
 }
-.cover .title{
-  color:var(--gold); font-size:2rem; letter-spacing:1px; font-weight:700; text-shadow:0 1px 0 rgba(0,0,0,0.15);
+
+.page.right { left:50%; transform-origin:right center; }
+.page.flipped { transform: rotateY(-180deg); z-index:0; }
+
+.page img { width:40%; height:auto; object-fit:cover; border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,0.2);}
+.page .text { width:15%; text-align:center; font-size:1rem; color:#3b2d26; }
+
+.cover, .backcover {
+  position:absolute; width:50%; height:100%; top:0; background:linear-gradient(180deg,#4b2c28,#6b3e36);
+  color:#d4af37; display:flex; flex-direction:column; justify-content:center; align-items:center; border-radius:10px;
+  font-weight:bold; font-size:1.8rem; text-align:center; padding:20px; box-shadow:0 10px 30px rgba(0,0,0,0.4);
 }
-.cover .subtitle{
-  color:#f5e5c1; font-size:1rem; margin-top:12px; font-style:italic;
-}
-.cover::before{ content:''; position:absolute; inset:6px; border-radius:10px; box-shadow: inset 0 0 0 2px rgba(0,0,0,0.15); }
+.cover { left:0; transform-origin:left center; }
+.backcover { right:0; transform-origin:right center; }
 
-.backcover{
-  transform-origin:right center;
-  transform: rotateY(180deg);
-  background: linear-gradient(180deg,var(--cover-mid),var(--cover-dark));
-  border:3px solid rgba(0,0,0,0.28);
-  box-shadow: 0 10px 40px rgba(0,0,0,0.55), inset 0 6px 18px rgba(255,255,255,0.02);
-  position:relative;
-}
-.stitch { position:absolute; right:22px; top:12%; height:76%; width:8px; display:flex; flex-direction:column; align-items:center; justify-content:space-between; z-index:120; }
-.stitch span{ display:block; width:6px; height:6px; background:var(--stitch); border-radius:2px; box-shadow:0 2px 2px rgba(0,0,0,0.25); transform:rotate(12deg); opacity:0.95 }
+.controls { position:absolute; bottom:20px; display:flex; gap:15px; }
+button { padding:10px 16px; border:none; border-radius:8px; background:#d4af37; color:#fff; font-weight:bold; cursor:pointer; }
 
-.pages{ position:absolute; left:0; top:0; width:100%; height:100%; transform-style:preserve-3d; pointer-events:auto; z-index:50; }
-
-.page{
-  position:absolute; left:0; top:0; width:100%; height:100%; border-radius:8px; box-sizing:border-box;
-  background: linear-gradient(180deg, var(--paper), #f6eadc);
-  border:1px solid rgba(0,0,0,0.06); padding:20px; overflow:hidden;
-  transform-origin:left center; backface-visibility:hidden;
-  transition: transform 750ms cubic-bezier(.2,.9,.25,1), box-shadow 400ms ease;
-  display:flex; align-items:center; justify-content:center; will-change: transform;
-}
-.page::after{
-  content:''; position:absolute; right:-12px; top:10px; bottom:10px; width:14px; border-radius:3px;
-  background: linear-gradient(180deg, var(--paper-edge), rgba(0,0,0,0.02)); box-shadow: inset 0 0 6px rgba(0,0,0,0.06);
-}
-.inner{ width:92%; height:90%; border-radius:4px; padding:16px; box-sizing:border-box;
-  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.01));
-  display:flex; align-items:center; justify-content:center; text-align:center; color:#3b2d26; font-size:1rem; line-height:1.55;
-}
-.page img{ width:100%; height:100%; object-fit:cover; border-radius:6px; box-shadow:0 6px 18px rgba(0,0,0,0.16) inset; }
-
-.page.turning{ transform: rotateY(-92deg) translateX(6px) scale(1.01); box-shadow: -28px 14px 70px rgba(0,0,0,0.5); z-index:9999 !important; }
-.page.flipped{ transform: rotateY(-180deg) translateX(-8px); box-shadow:-6px 10px 32px rgba(0,0,0,0.36); z-index:5 !important; }
-
-.controls{ position:absolute; bottom:14px; left:0; right:0; display:flex; justify-content:center; gap:14px; pointer-events:none; z-index:160; }
-.btn{ pointer-events:auto; background: linear-gradient(180deg,#fff,#f4efe4); border-radius:10px; padding:10px 14px; border:1px solid rgba(0,0,0,0.06); font-weight:700; cursor:pointer; box-shadow:0 8px 20px rgba(0,0,0,0.18); opacity:0; transform:translateY(8px); transition:opacity .28s, transform .28s;}
-.book-wrap:hover .btn, .book-wrap.touching .btn{ opacity:1; transform:translateY(0); }
-
-.top-controls{ position:absolute; top:12px; right:18px; display:flex; gap:10px; z-index:180; }
-.top-controls button{ background:rgba(255,255,255,0.92); border:1px solid rgba(0,0,0,0.06); padding:8px 10px; border-radius:8px; cursor:pointer; font-weight:700 }
-
-@media (max-width:720px){
-  .book{ width:86vw; height:74vw; }
-  .inner{ font-size:0.94rem; padding:12px; }
-  .cover .title{ font-size:1.4rem }
+@media(max-width:720px){
+  .page img { width:35%; }
+  .page .text { font-size:0.85rem; width:20%; }
 }
 </style>
 </head>
 <body>
-<div class="scene" id="scene">
 
-<div class="book-wrap" id="bookWrap">
-  <div class="book-shadow" aria-hidden="true"></div>
-  <div class="book" id="book">
-    <!-- COVER -->
-    <div class="cover" id="cover">
-      <div>
-        <div class="title">Henia Cisneros</div>
-        <div class="subtitle">Un día lleno de cariño y celebración</div>
-      </div>
+<div class="book-wrap">
+  <div class="book">
+    <!-- Portada -->
+    <div class="cover">Henia Cisneros<br><span style="font-size:1rem;font-weight:normal;">Un día lleno de cariño y celebración</span></div>
+    
+    <!-- Doble Página 1 -->
+    <div class="page left" data-index="0">
+      <img src="img/pagina1_izq.jpg" alt="Foto izquierda">
+      <div class="text">Querida Henia, disfrutando momentos especiales</div>
+      <img src="img/pagina1_der.jpg" alt="Foto derecha">
     </div>
 
-    <!-- PAGES -->
-    <div class="pages" id="pages">
-      <div class="page" data-index="0"><div class="inner"><img src="img/pagina1.jpg" alt="Foto 1"></div></div>
-      <div class="page" data-index="1"><div class="inner"><p><strong>Querida Henia,</strong><br><br>Hoy celebramos tu historia y tu alegría, agradeciendo siempre la vida y el amor que compartes.</p></div></div>
-      <div class="page" data-index="2"><div class="inner"><img src="img/pagina2.jpg" alt="Foto 2"></div></div>
-      <div class="page" data-index="3"><div class="inner"><img src="img/pagina3.jpg" alt="Foto 3"></div></div>
-      <div class="page" data-index="4"><div class="inner"><p>Que nunca falte la sonrisa y la paz en tu vida.<br><strong>Con cariño,<br>Manuel</strong></p></div></div>
+    <!-- Doble Página 2 -->
+    <div class="page left" data-index="1">
+      <img src="img/pagina2_izq.jpg" alt="Foto izquierda">
+      <div class="text">Recuerdos que siempre brillan</div>
+      <img src="img/pagina2_der.jpg" alt="Foto derecha">
     </div>
 
-    <!-- BACK COVER -->
-    <div class="backcover" id="backcover">
-      <div class="stitch" aria-hidden="true">
-        <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
-      </div>
-    </div>
+    <!-- Contraportada -->
+    <div class="backcover">Fin del libro</div>
   </div>
 
-  <!-- Controls -->
-  <div class="controls" role="toolbar" aria-label="Navegación del libro">
-    <button class="btn" id="prevBtn">⟵ Atrás</button>
-    <button class="btn" id="nextBtn">Siguiente ⟶</button>
-  </div>
-
-  <div class="top-controls">
-    <button id="audioBtn">🔈 Música</button>
-    <button id="resetBtn">⤺ Volver</button>
+  <div class="controls">
+    <button id="prevBtn">⟵ Atrás</button>
+    <button id="nextBtn">Siguiente ⟶</button>
   </div>
 </div>
-</div>
-
-<!-- Audio -->
-<audio id="pageSound" preload="auto">
-  <source src="https://www.soundjay.com/books/page-turn-4.mp3" type="audio/mpeg">
-</audio>
-<audio id="bgMusic" preload="auto" loop>
-  <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_efc06752a0.mp3?filename=soft-piano-ambient-112191.mp3" type="audio/mpeg">
-</audio>
 
 <script>
-(function(){
-const pagesContainer=document.getElementById('pages');
-let pageEls=Array.from(pagesContainer.querySelectorAll('.page'));
-const cover=document.getElementById('cover');
-const backcover=document.getElementById('backcover');
-const nextBtn=document.getElementById('nextBtn');
-const prevBtn=document.getElementById('prevBtn');
-const resetBtn=document.getElementById('resetBtn');
-const audioBtn=document.getElementById('audioBtn');
-const pageSound=document.getElementById('pageSound');
-const bgMusic=document.getElementById('bgMusic');
-const bookWrap=document.getElementById('bookWrap');
-let current=0;
-let audioOn=false;
-const total=pageEls.length;
+const pages = document.querySelectorAll('.page');
+let current = 0;
 
-function syncSizing(){
-  const book=document.getElementById('book');
-  const r=book.getBoundingClientRect();
-  [cover,backcover,pagesContainer].forEach(el=>{el.style.width=r.width+'px'; el.style.height=r.height+'px';});
-  pageEls.forEach(p=>{p.style.width=r.width+'px'; p.style.height=r.height+'px';});
-}
-setTimeout(syncSizing,40);
-window.addEventListener('resize',syncSizing);
-
-function setStack(){pageEls.forEach((p,i)=>{p.style.zIndex=(1000-i*2).toString();});}
-setStack();
-
-function playPageSound(){try{if(pageSound && pageSound.querySelector('source') && audioOn){pageSound.currentTime=0; pageSound.play().catch(()=>{});}}catch(e){}}
-function tryPlayBg(){try{if(bgMusic && bgMusic.querySelector('source') && audioOn){bgMusic.volume=0.22; bgMusic.play().then(()=>audioBtn.textContent='🔊 Música ON').catch(()=>{audioBtn.textContent='🔈 Música (pulsa)'});}else{audioBtn.textContent=(audioOn?'🔊 Sonidos ON':'🔈 Música');}}catch(e){}}
-
-function flipNext(){
-  if(current>=total){pageEls.forEach((p,i)=>p.classList.add('flipped')); cover.style.transform='rotateY(0deg)'; backcover.style.transform='rotateY(0deg)'; return;}
-  const page=pageEls[current];
-  if(!page)return;
-  page.style.zIndex=2000;
-  page.classList.add('turning');
-  playPageSound();
-  if(current===0){cover.style.transition='transform 520ms cubic-bezier(.2,.9,.25,1)'; cover.style.transform='rotateY(-130deg)';}
-  setTimeout(()=>{page.classList.remove('turning'); page.classList.add('flipped'); page.style.zIndex=(10+current).toString(); current++; if(current===total){setTimeout(()=>{backcover.style.transform='rotateY(0deg)'; cover.style.transform='rotateY(0deg)';},380);}},440);
-}
-
-function flipPrev(){
-  if(current<=0)return;
-  const idx=current-1;
-  const page=pageEls[idx];
-  if(!page)return;
-  page.style.zIndex=2000;
-  page.classList.remove('flipped');
-  playPageSound();
-  setTimeout(()=>{setStack();},460);
-  current--;
-  backcover.style.transform='rotateY(180deg)';
-  if(current===0){cover.style.transform='rotateY(0deg)';}else{cover.style.transform='rotateY(-140deg)';}
-}
-
-nextBtn.addEventListener('click',flipNext);
-prevBtn.addEventListener('click',flipPrev);
-resetBtn.addEventListener('click',()=>{pageEls.forEach(p=>{p.classList.remove('flipped','turning');});current=0; setStack(); backcover.style.transform='rotateY(180deg)'; cover.style.transform='rotateY(0deg)';});
-audioBtn.addEventListener('click',()=>{audioOn=!audioOn; tryPlayBg(); if(!audioOn){try{bgMusic.pause(); audioBtn.textContent='🔈 Música';}catch(e){}}});
-
-bookWrap.addEventListener('click',(ev)=>{
-  const rect=ev.currentTarget.getBoundingClientRect();
-  const x=ev.clientX-rect.left;
-  const edge=Math.max(40, rect.width*0.12);
-  if(x>rect.width-edge) flipNext();
-  else if(x<edge) flipPrev();
-  else flipNext();
+document.getElementById('nextBtn').addEventListener('click', () => {
+  if(current < pages.length){
+    pages[current].classList.add('flipped');
+    current++;
+  }
 });
 
-let startX=0,startY=0,moved=false;
-bookWrap.addEventListener('touchstart',(e)=>{const t=e.touches[0]; startX=t.clientX; startY=t.clientY; moved=false; bookWrap.classList.add('touching');},{passive:true});
-bookWrap.addEventListener('touchmove',(e)=>{moved=true;},{passive:true});
-bookWrap.addEventListener('touchend',(e)=>{bookWrap.classList.remove('touching'); const t=e.changedTouches[0]; const dx=t.clientX-startX; const dy=t.clientY-startY; const absDx=Math.abs(dx),absDy=Math.abs(dy); if(absDx>30 && absDx>absDy){if(dx<0) flipNext(); else flipPrev();}else{if(!moved) flipNext();}}, {passive:true});
-
-document.addEventListener('keydown',(e)=>{if(e.key==='ArrowRight')flipNext(); if(e.key==='ArrowLeft')flipPrev();});
-backcover.style.transform='rotateY(180deg)';
-
-function autoOpen(){cover.style.transition='transform 700ms cubic-bezier(.2,.9,.25,1)'; setTimeout(()=>{cover.style.transform='rotateY(-120deg)'; playPageSound();},500); setTimeout(()=>{cover.style.transform='rotateY(-150deg)';},1000); setTimeout(()=>{cover.style.transform='rotateY(-140deg)';},1500);}
-setTimeout(()=>{syncSizing(); autoOpen(); try{if(pageSound && pageSound.querySelector('source')){pageSound.currentTime=0; pageSound.play().catch(()=>{});}}catch(e){} try{if(bgMusic && bgMusic.querySelector('source')){bgMusic.volume=0.22; bgMusic.play().then(()=>{audioOn=true; audioBtn.textContent='🔊 Música ON';}).catch(()=>{audioOn=false; audioBtn.textContent='🔈 Música';});}}catch(e){}},2000);
-})();
+document.getElementById('prevBtn').addEventListener('click', () => {
+  if(current > 0){
+    current--;
+    pages[current].classList.remove('flipped');
+  }
+});
 </script>
+
 </body>
 </html>
+
