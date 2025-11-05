@@ -6,7 +6,7 @@
 <title>Henia Cisneros — Libro</title>
 <style>
   :root{
-    --desk-1:#6f4f3a; --desk-2:#b08966;
+    --desk-1:#6b4632; --desk-2:#9b6f4f; /* tono caoba/sofisticado */
     --cover-dark:#120812;      /* cuero muy oscuro / negro-morado */
     --cover-mid:#3b2030;       /* reflejo morado */
     --gold:#c9a84f;
@@ -15,34 +15,39 @@
     --stitch:#d2b27a;
     --shadow: rgba(0,0,0,0.5);
   }
-  html,body{height:100%;margin:0;font-family:Georgia, 'Times New Roman', serif;background:linear-gradient(180deg,var(--desk-1),var(--desk-2));display:flex;align-items:center;justify-content:center;overflow:hidden;color:#2f241f}
-  /* Scene: wooden desk card */
+
+  html,body{height:100%;margin:0;font-family:Georgia, 'Times New Roman', serif;
+    background: linear-gradient(180deg,var(--desk-1),var(--desk-2));
+    display:flex;align-items:center;justify-content:center;overflow:hidden;color:#2f241f;}
+
+  /* scene: polished wood card */
   .scene{
-    width:94vw; max-width:1080px; height:84vh; max-height:760px; border-radius:14px;
+    width:94vw; max-width:1100px; height:84vh; max-height:760px; border-radius:14px;
     box-shadow: 0 30px 90px rgba(0,0,0,0.6), inset 0 6px 24px rgba(255,255,255,0.02);
     background:
       linear-gradient(180deg, rgba(0,0,0,0.06), rgba(255,255,255,0.02)),
-      url('https://images.unsplash.com/photo-1505691723518-36a45b89acb1?auto=format&fit=crop&w=1400&q=60') center/cover no-repeat;
-    position:relative; padding:34px; display:flex; align-items:center; justify-content:center;
+      url('https://images.unsplash.com/photo-1505691723518-36a45b89acb1?auto=format&fit=crop&w=1400&q=80') center/cover no-repeat;
+    position:relative; padding:28px; display:flex; align-items:center; justify-content:center;
   }
 
-  /* decorative quills */
-  .quill { position:absolute; width:100px; opacity:0.95; filter:drop-shadow(0 6px 20px rgba(0,0,0,0.4)); }
+  /* small decorative quills */
+  .quill { position:absolute; width:100px; opacity:0.95; filter:drop-shadow(0 6px 20px rgba(0,0,0,0.4)); z-index:20; }
   .quill.left { left:18px; top:26px; transform: rotate(-12deg); }
   .quill.right { right:18px; bottom:28px; transform: scaleX(-1) rotate(-8deg); opacity:0.9 }
 
-  /* book wrapper */
-  .book-wrap{ width:640px; max-width:86%; height:480px; max-height:86%; perspective:3000px; display:flex; align-items:center; justify-content:center; position:relative; }
-  .book-shadow { position:absolute; bottom:6%; width:55%; height:24px; background:radial-gradient(closest-side, rgba(0,0,0,0.55), transparent); filter:blur(18px); z-index:1;}
+  /* book wrapper (centered but slightly lower to look 'on the desk') */
+  .book-wrap{ width:680px; max-width:86%; height:520px; max-height:86%; perspective:3300px; display:flex; align-items:center; justify-content:center; position:relative; transform: translateY(8%); }
+  .book-shadow { position:absolute; bottom:4%; width:58%; height:22px; background:radial-gradient(closest-side, rgba(0,0,0,0.55), transparent); filter:blur(18px); z-index:1;}
 
-  /* book element */
+  /* book box: everything (cover, pages, backcover) sits inside same box to match sizes exactly */
   .book{
-    width:520px; height:380px; position:relative; transform-style:preserve-3d; z-index:10; transition: transform 900ms cubic-bezier(.2,.9,.25,1);
+    width:540px; height:420px; position:relative; transform-style:preserve-3d; z-index:10; transition: transform 900ms cubic-bezier(.2,.9,.25,1);
+    display:block;
   }
 
-  /* cover and backcover */
+  /* common for cover/backcover so sizes match pages exactly */
   .cover, .backcover{
-    position:absolute; inset:0; border-radius:10px; box-sizing:border-box; display:flex; align-items:center; justify-content:center; text-align:center; padding:30px;
+    position:absolute; left:0; top:0; width:100%; height:100%; border-radius:10px; box-sizing:border-box; display:flex; align-items:center; justify-content:center; text-align:center; padding:30px;
     backface-visibility:hidden; transform-style:preserve-3d; z-index:60;
   }
 
@@ -53,27 +58,14 @@
     border: 3px solid rgba(0,0,0,0.38);
     transform-origin: left center;
     font-family: 'Cormorant Garamond', Georgia, serif;
-    position:relative;
-    overflow:visible;
+    position:relative; overflow:visible;
   }
-  /* embossed stitched title (simulated with text-shadow + pseudo-element) */
   .cover .title{
-    color:var(--gold);
-    font-size:2.0rem;
-    letter-spacing:1px;
-    position:relative;
-    text-shadow:
-      0 1px 0 rgba(255,255,255,0.05),
-      0 2px 6px rgba(0,0,0,0.65),
-      0 -1px 0 rgba(0,0,0,0.12);
-    font-weight:700;
-    transform: translateZ(6px);
+    color:var(--gold); font-size:2.0rem; letter-spacing:1px; position:relative;
+    text-shadow: 0 1px 0 rgba(255,255,255,0.05), 0 2px 6px rgba(0,0,0,0.65), 0 -1px 0 rgba(0,0,0,0.12);
+    font-weight:700; transform: translateZ(6px);
   }
-  /* small sewn border effect using pseudo-elements */
-  .cover::before{
-    content:''; position:absolute; inset:8px; border-radius:8px; pointer-events:none;
-    box-shadow: inset 0 0 0 2px rgba(0,0,0,0.12);
-  }
+  .cover::before{ content:''; position:absolute; inset:8px; border-radius:8px; pointer-events:none; box-shadow: inset 0 0 0 2px rgba(0,0,0,0.12); }
 
   .backcover{
     transform-origin:right center;
@@ -83,27 +75,24 @@
     box-shadow: 0 10px 40px rgba(0,0,0,0.55), inset 0 6px 18px rgba(255,255,255,0.02);
     position:relative;
   }
+
   /* stitches column on backcover */
-  .stitch {
-    position:absolute; right:22px; top:12%; height:76%; width:8px; display:flex; flex-direction:column; align-items:center; justify-content:space-between; z-index:120;
-  }
+  .stitch { position:absolute; right:22px; top:12%; height:76%; width:8px; display:flex; flex-direction:column; align-items:center; justify-content:space-between; z-index:120; }
   .stitch span{ display:block; width:6px; height:6px; background:var(--stitch); border-radius:2px; box-shadow:0 2px 2px rgba(0,0,0,0.25); transform:rotate(12deg); opacity:0.95 }
 
-  /* pages container */
-  .pages{ position:absolute; left:18px; right:18px; top:14px; bottom:14px; transform-style:preserve-3d; pointer-events:auto; }
+  /* pages container exactly same bounding box as cover/backcover */
+  .pages{ position:absolute; left:0; top:0; width:100%; height:100%; transform-style:preserve-3d; pointer-events:auto; z-index:50; }
 
-  /* page */
+  /* page look */
   .page{
     position:absolute; left:0; top:0; width:100%; height:100%; border-radius:6px; box-sizing:border-box;
     background: linear-gradient(180deg, var(--paper), #f6eadc);
     border:1px solid rgba(0,0,0,0.06);
     padding:20px; overflow:hidden; transform-origin:left center; backface-visibility:hidden;
     transition: transform 760ms cubic-bezier(.2,.9,.25,1), box-shadow 360ms ease;
-    display:flex; align-items:center; justify-content:center;
-    will-change: transform;
+    display:flex; align-items:center; justify-content:center; will-change: transform;
   }
 
-  /* right-edge visible to simulate pages */
   .page::after{
     content:''; position:absolute; right:-12px; top:10px; bottom:10px; width:14px; border-radius:3px;
     background: linear-gradient(180deg, var(--paper-edge), rgba(0,0,0,0.02)); box-shadow: inset 0 0 6px rgba(0,0,0,0.06);
@@ -118,16 +107,16 @@
 
   .page img{ width:100%; height:100%; object-fit:cover; border-radius:6px; box-shadow:0 6px 18px rgba(0,0,0,0.16) inset; }
 
-  /* turning / flipped states */
+  /* turning / flipped */
   .page.turning{ transform: rotateY(-92deg) translateX(6px) scale(1.01); box-shadow: -28px 14px 70px rgba(0,0,0,0.5); z-index:9999 !important; }
   .page.flipped{ transform: rotateY(-180deg) translateX(-8px); box-shadow:-6px 10px 32px rgba(0,0,0,0.36); z-index:5 !important; }
 
   /* controls */
-  .controls{ position:absolute; bottom:12px; left:0; right:0; display:flex; justify-content:center; gap:14px; pointer-events:none; z-index:120; }
+  .controls{ position:absolute; bottom:14px; left:0; right:0; display:flex; justify-content:center; gap:14px; pointer-events:none; z-index:160; }
   .btn{ pointer-events:auto; background: linear-gradient(180deg,#fff,#f4efe4); border-radius:10px; padding:10px 14px; border:1px solid rgba(0,0,0,0.06); font-weight:700; cursor:pointer; box-shadow:0 8px 20px rgba(0,0,0,0.18); opacity:0; transform:translateY(8px); transition:opacity .28s, transform .28s;}
   .book-wrap:hover .btn, .book-wrap.touching .btn{ opacity:1; transform:translateY(0); }
 
-  .top-controls{ position:absolute; top:12px; right:18px; display:flex; gap:10px; z-index:160; }
+  .top-controls{ position:absolute; top:12px; right:18px; display:flex; gap:10px; z-index:180; }
   .top-controls button{ background:rgba(255,255,255,0.92); border:1px solid rgba(0,0,0,0.06); padding:8px 10px; border-radius:8px; cursor:pointer; font-weight:700 }
 
   @media (max-width:720px){
@@ -154,7 +143,7 @@
           </div>
         </div>
 
-        <!-- PAGES -->
+        <!-- PAGES exactly same box as cover -->
         <div class="pages" id="pages">
           <!-- page 1: image -->
           <div class="page" data-index="0">
@@ -240,16 +229,30 @@
   let audioOn = false;
   const total = pageEls.length;
 
+  // make sure cover/backcover + pages share same size: ensure they match book client rect
+  function syncSizing(){
+    const book = document.getElementById('book');
+    const r = book.getBoundingClientRect();
+    // Force cover/backcover/pages to the same CSS size by inline styles (helps some browsers)
+    [cover, backcover, pagesContainer].forEach(el=>{
+      el.style.width = r.width + 'px';
+      el.style.height = r.height + 'px';
+    });
+    pageEls.forEach(p=>{ p.style.width = r.width + 'px'; p.style.height = r.height + 'px'; });
+  }
+  // initial sizing sync and on resize
+  setTimeout(syncSizing, 40);
+  window.addEventListener('resize', syncSizing);
+
   // initialize stacking order so page 0 is topmost
   function setStack(){
     pageEls.forEach((p,i) => {
-      // topmost page should have higher z-index
       p.style.zIndex = (1000 - i*2).toString();
     });
   }
   setStack();
 
-  // play page sound only if audio allowed
+  // play page sound only if audioOn true
   function playPageSound(){
     try{
       if(pageSound && pageSound.querySelector('source') && audioOn){
@@ -262,8 +265,7 @@
     try{
       if(bgMusic && bgMusic.querySelector('source') && audioOn){
         bgMusic.volume = 0.22;
-        bgMusic.play().catch(()=>{ audioBtn.textContent = '🔈 Música (pulsa para activar)'; });
-        audioBtn.textContent = '🔊 Música ON';
+        bgMusic.play().then(()=> audioBtn.textContent='🔊 Música ON').catch(()=>{ audioBtn.textContent='🔈 Música (pulsa)' });
       } else {
         audioBtn.textContent = (audioOn? '🔊 Sonidos ON' : '🔈 Música');
       }
@@ -274,9 +276,8 @@
   function flipNext(){
     if(current >= total){
       // if past last page, show backcover (closed)
-      // ensure all pages are flipped
       pageEls.forEach((p,i)=> p.classList.add('flipped'));
-      // show backcover visually (bring to front quickly)
+      // ensure backcover visible and cover closed
       backcover.style.transform = 'rotateY(0deg)';
       cover.style.transform = 'rotateY(0deg)';
       return;
@@ -287,17 +288,23 @@
     page.style.zIndex = 2000;
     page.classList.add('turning');
     playPageSound();
+    // slight delay ensures cover + page sequence feels natural (cover partly moves then page flips)
+    // keep cover slightly open if this is first flip
+    if(current === 0){
+      cover.style.transition = 'transform 520ms cubic-bezier(.2,.9,.25,1)';
+      cover.style.transform = 'rotateY(-130deg)';
+    }
     setTimeout(()=>{
       page.classList.remove('turning');
       page.classList.add('flipped');
-      // after flipped, adjust z so it sits behind remaining pages
+      // after flipped, put it behind others
       page.style.zIndex = (10 + current).toString();
       current++;
       // if reached end show backcover
       if(current === total){
         setTimeout(()=>{ backcover.style.transform = 'rotateY(0deg)'; cover.style.transform = 'rotateY(0deg)'; }, 380);
       }
-    }, 420);
+    }, 440);
   }
 
   // flip previous
@@ -306,16 +313,21 @@
     const idx = current - 1;
     const page = pageEls[idx];
     if(!page) return;
-    // bring page to front briefly for animation
+    // bring to front
     page.style.zIndex = 2000;
     // unflip
     page.classList.remove('flipped');
     playPageSound();
-    // after animation restore stack order
     setTimeout(()=>{ setStack(); }, 460);
     current--;
     // hide backcover if visible
     backcover.style.transform = 'rotateY(180deg)';
+    // reset cover if we returned to start
+    if(current === 0){
+      cover.style.transform = 'rotateY(0deg)';
+    } else {
+      cover.style.transform = 'rotateY(-140deg)';
+    }
   }
 
   // controls
@@ -330,7 +342,7 @@
     cover.style.transform = 'rotateY(0deg)';
   });
 
-  // audio toggle (requires interaction for mobile)
+  // audio toggle
   audioBtn.addEventListener('click', ()=>{
     audioOn = !audioOn;
     tryPlayBg();
@@ -347,7 +359,7 @@
     else flipNext();
   });
 
-  // Touch: swipe detection
+  // touch: swipe detection
   let startX = 0, startY = 0, moved = false;
   bookWrap.addEventListener('touchstart', (e)=>{
     const t = e.touches[0];
@@ -379,50 +391,40 @@
   // initial: hide backcover behind (rotated)
   backcover.style.transform = 'rotateY(180deg)';
 
-  // Automatic open after ~2.5s: animate cover slightly and play page sound
+  // Automatic opening sequence after 2.5s (cover rotates slightly then settles)
   function autoOpen(){
-    // rotate cover a bit to simulate opening and play page sound
-    cover.style.transition = 'transform 900ms cubic-bezier(.2,.9,.25,1)';
-    cover.style.transform = 'rotateY(-130deg)'; // half-open
-    // small page sound to suggest opening
-    if(pageSound && pageSound.querySelector('source')) {
-      try{ pageSound.currentTime = 0; pageSound.play().catch(()=>{}); }catch(e){}
-    }
-    // after a bit, settle to open state (cover partially open)
-    setTimeout(()=>{ cover.style.transform = 'rotateY(-160deg)'; }, 520);
-    // then after another small delay bring cover to open resting (so user can click)
-    setTimeout(()=>{ cover.style.transform = 'rotateY(-140deg)'; }, 1200);
+    // small staged animation for realistic opening
+    cover.style.transition = 'transform 700ms cubic-bezier(.2,.9,.25,1)';
+    setTimeout(()=>{ cover.style.transform = 'rotateY(-120deg)'; playPageSound(); }, 60);
+    setTimeout(()=>{ cover.style.transform = 'rotateY(-150deg)'; }, 380);
+    setTimeout(()=>{ cover.style.transform = 'rotateY(-140deg)'; }, 920);
   }
 
-  // attempt play bg music (may be blocked on mobile) but we will show audio button to enable
+  // Try to autoplay music (most mobiles will block; user can enable)
   function tryAutoPlayMusic(){
     try{
       if(bgMusic && bgMusic.querySelector('source')){
         bgMusic.volume = 0.22;
-        bgMusic.play().then(()=>{ audioOn = true; audioBtn.textContent='🔊 Música ON'; })
-        .catch(()=>{ /* blocked, user must enable */ audioOn = false; audioBtn.textContent='🔈 Música'; });
+        bgMusic.play().then(()=> { audioOn = true; audioBtn.textContent='🔊 Música ON'; })
+        .catch(()=>{ audioOn = false; audioBtn.textContent='🔈 Música'; });
       }
     }catch(e){}
   }
 
-  // Run auto open after 2.5s
+  // run auto open after 2.5s
   setTimeout(()=>{
+    syncSizing();
     autoOpen();
-    // play a page sound to simulate opening
+    // small page sound to signal opening
     try{ if(pageSound && pageSound.querySelector('source')) { pageSound.currentTime = 0; pageSound.play().catch(()=>{}); } }catch(e){}
-    // try autoplay music (if permitted)
     tryAutoPlayMusic();
   }, 2500);
 
-  // If user resizes or DOM changes, refresh pageEls & stacking
-  // (useful if dev replaces pages dynamically)
-  function refreshPages(){
-    pageEls = Array.from(document.querySelectorAll('.page'));
-    pageEls.forEach((p,i)=> p.style.zIndex = (1000 - i*2).toString());
-  }
-  window.addEventListener('resize', refreshPages);
+  // refresh page list if needed (dev use)
+  function refreshPages(){ pageEls = Array.from(document.querySelectorAll('.page')); setStack(); }
+  window.addEventListener('resize', ()=>{ syncSizing(); refreshPages(); });
 
-  // Developer hint
+  // developer note
   console.log('Reemplaza img/pagina*.jpg y audio/pagina.mp3 audio/fondo.mp3 si lo deseas.');
 })();
 </script>
