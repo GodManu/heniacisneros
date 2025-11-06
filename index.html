@@ -3,211 +3,216 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Henia Cisneros — Libro</title>
+<title>Henia Cisneros — Libro (Final)</title>
 <style>
 :root{
-  --desk-1:#5a3d2a; /* madera oscura cálida */
+  --desk-1:#5a3d2a;
   --desk-2:#8a6242;
-  --leather-1:#32171f; /* cuero burdeos/negro */
+  --leather-1:#32171f;
   --leather-2:#4a2330;
   --gold:#c9a84f;
   --paper:#fbf6ec;
   --paper-edge:#e5d6bf;
   --stitch:#d2b27a;
   --shadow: rgba(0,0,0,0.45);
-  --leaf-thickness: 6px; /* grosor visual de hojas */
+  --leaf-thick:8px;
+  --book-width:720px; /* base width (will be responsive) */
+  --book-height:470px;
 }
 
-/* page reset */
+/* reset */
 *{box-sizing:border-box}
 html,body{height:100%;margin:0;font-family: 'Cormorant Garamond', Georgia, serif;background: linear-gradient(180deg,var(--desk-1),var(--desk-2));display:flex;align-items:center;justify-content:center;overflow:hidden;color:#2f241f}
 
 /* Scene (desk) */
 .scene{
-  width:94vw; max-width:1200px; height:86vh; max-height:820px; position:relative;
-  display:flex; align-items:center; justify-content:center; padding:30px;
+  width:94vw; max-width:1280px; height:86vh; max-height:880px; position:relative; display:flex; align-items:center; justify-content:center; padding:24px;
 }
-
-/* subtle vignette and desk texture (unsplash) */
 .scene::before{
   content:""; position:absolute; inset:0; border-radius:12px;
   background-image: url('https://images.unsplash.com/photo-1505691723518-36a45b89acb1?auto=format&fit=crop&w=1600&q=80');
-  background-size:cover; background-position:center; opacity:0.12; mix-blend-mode:multiply; z-index:0;
+  background-size:cover; background-position:center; opacity:0.10; mix-blend-mode:multiply; z-index:0;
 }
 
-/* Book wrapper & shadow */
-.book-wrap{ width:820px; max-width:92%; height:540px; max-height:86%; perspective:3000px; position:relative; z-index:10; display:flex; align-items:center; justify-content:center; }
-.book-shadow{ position:absolute; bottom:8%; width:62%; height:28px; background: radial-gradient(closest-side, rgba(0,0,0,0.55), transparent); filter: blur(20px); z-index:2; }
+/* Book wrapper and shadow */
+.book-wrap{ width:calc(var(--book-width)); height:calc(var(--book-height)); max-width:92%; max-height:86%; perspective:3000px; position:relative; z-index:10; display:flex; align-items:center; justify-content:center; }
+.book-shadow{ position:absolute; bottom:4%; width:58%; height:26px; background: radial-gradient(closest-side, rgba(0,0,0,0.6), transparent); filter: blur(20px); z-index:2; }
 
-/* Book (spine center) */
-.book{
-  width:640px; height:420px; position:relative; transform-style:preserve-3d; z-index:20; pointer-events:auto;
-  display:block;
-}
+/* Book container (spine centered) */
+.book{ width:100%; height:100%; position:relative; transform-style:preserve-3d; pointer-events:auto; }
 
-/* Stack container (centered on spine) */
+/* spine (lomo) */
+.spine{ position:absolute; left:50%; top:6px; width:26px; height:calc(100% - 12px); transform:translateX(-50%); background: linear-gradient(180deg,#2b161b,#4a2a36); border-radius:6px; box-shadow: inset 0 2px 6px rgba(255,255,255,0.02); z-index:200; pointer-events:none; }
+
+/* Stack (all leaves centered on spine) */
 .stack{ position:absolute; inset:0; left:50%; transform:translateX(-50%); width:100%; height:100%; transform-style:preserve-3d; }
 
-/* Generic leaf (each physical sheet) */
+/* Generic leaf (a physical sheet) */
 .leaf{
-  position:absolute;
-  left:0; top:0;
-  width:100%; height:100%;
-  transform-style:preserve-3d;
-  backface-visibility:hidden;
-  transition: transform 820ms cubic-bezier(.2,.9,.25,1), box-shadow 320ms ease;
+  position:absolute; left:0; top:0; width:100%; height:100%;
+  transform-style:preserve-3d; backface-visibility:hidden;
+  transition: transform 820ms cubic-bezier(.2,.9,.25,1), box-shadow 300ms;
   will-change: transform;
-  cursor: pointer;
+  cursor:pointer;
 }
 
-/* simulate leaf edge thickness with pseudo-element on the right (visible when closed) */
+/* visual edge thickness */
 .leaf::after{
-  content:""; position:absolute; right:-var(--leaf-thickness); top:6px; bottom:6px; width:var(--leaf-thickness);
+  content:""; position:absolute; right:-var(--leaf-thick); top:6px; bottom:6px; width:var(--leaf-thick);
   background: linear-gradient(180deg, rgba(0,0,0,0.06), rgba(0,0,0,0.02));
-  border-radius:3px;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.03);
-  transform: translateZ(0.02px);
+  border-radius:3px; transform: translateZ(0.02px);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.02);
 }
 
-/* Cover styling (first leaf is cover) */
-.cover .face{
-  background: linear-gradient(180deg, var(--leather-1), var(--leather-2));
-  border-radius:10px;
-  border: 3px solid rgba(0,0,0,0.36);
-  box-shadow: 0 18px 60px rgba(0,0,0,0.55), inset 0 6px 18px rgba(255,255,255,0.02);
-  display:flex; flex-direction:column; align-items:center; justify-content:center; padding:36px;
-  color:var(--gold); text-align:center;
-}
-
-/* Inner page face (two-column layout) */
+/* face (front) */
 .face{
-  position:absolute; inset:0; left:0; top:0; padding:20px; box-sizing:border-box; border-radius:8px;
+  position:absolute; inset:0; padding:18px; box-sizing:border-box; border-radius:8px;
+  display:flex; gap:12px; align-items:center; justify-content:space-between; backface-visibility:hidden;
   background: linear-gradient(180deg, var(--paper), #f6eadc);
   border:1px solid rgba(0,0,0,0.06);
-  display:flex; align-items:center; justify-content:space-between;
-  gap:12px;
 }
 
-/* left/right columns (each leaf shows both sides by flipping the leaf) */
-.col{ width:48%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:12px; box-sizing:border-box; }
-.col img{ width:100%; height:auto; max-height:48%; object-fit:cover; border-radius:8px; box-shadow:0 6px 18px rgba(0,0,0,0.12) inset; }
-.col .midtext{ margin-top:10px; color:#3b2d26; font-size:1rem; line-height:1.45; }
-
-/* when a leaf is flipped, rotate it around spine to show backface */
-.leaf.flipped{ transform: rotateY(-180deg); z-index:0; }
-
-/* backface: to avoid seeing mirrored content, add backside style */
-.leaf .back{ position:absolute; inset:0; left:0; top:0; transform: rotateY(180deg); backface-visibility:hidden;
-  display:flex; align-items:center; justify-content:center; padding:20px; box-sizing:border-box; border-radius:8px;
-  background: linear-gradient(180deg, var(--paper), #f6eadc);
+/* backside (when leaf is flipped, we show backface which is rotated 180) */
+.back{
+  position:absolute; inset:0; padding:18px; box-sizing:border-box; border-radius:8px;
+  display:flex; align-items:center; justify-content:center; background: linear-gradient(180deg, var(--paper), #f6eadc);
   border:1px solid rgba(0,0,0,0.04);
+  transform: rotateY(180deg);
+  backface-visibility:hidden;
 }
 
-/* spine visual - small center strip to mimic lomo */
-.spine{ position:absolute; left:50%; top:6px; width:22px; height:calc(100% - 12px); transform:translateX(-50%); background: linear-gradient(180deg,#2b161b,#4a2a36); border-radius:6px; box-shadow: inset 0 2px 6px rgba(255,255,255,0.02); z-index:30; pointer-events:none; }
+/* Cover styling (first leaf) */
+.leaf.cover .face{
+  background: linear-gradient(180deg, var(--leather-1), var(--leather-2));
+  color:var(--gold); border-radius:10px; border:3px solid rgba(0,0,0,0.36);
+  box-shadow: 0 20px 70px rgba(0,0,0,0.55), inset 0 6px 18px rgba(255,255,255,0.02);
+  display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;
+}
+.leaf.backcover .face{
+  background: linear-gradient(180deg, var(--leather-2), var(--leather-1));
+  border-radius:10px; border:3px solid rgba(0,0,0,0.34);
+}
+
+/* columns inside face (left & right) */
+.col{ width:48%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; gap:12px; text-align:center; padding:6px; box-sizing:border-box; }
+.col img{ width:100%; height:auto; max-height:48%; object-fit:cover; border-radius:8px; box-shadow:0 6px 18px rgba(0,0,0,0.12) inset; }
+.col .midtext{ color:#3b2d26; font-size:1rem; line-height:1.45; }
+
+/* center column for single-column pages (dedicatoria) */
+.center{ width:100%; display:flex; align-items:center; justify-content:center; padding:0 24px; }
+
+/* flipped state (rotate around spine) */
+.leaf.flipped{ transform: rotateY(-180deg); box-shadow: 0 6px 40px rgba(0,0,0,0.1); }
+
+/* interactive hover micro-lift for realism */
+.leaf:not(.flipped):hover{ transform: translateZ(6px) rotateY(0deg); box-shadow: 0 18px 60px rgba(0,0,0,0.28); }
 
 /* controls */
-.controls{ position:absolute; bottom:-56px; left:50%; transform:translateX(-50%); display:flex; gap:14px; z-index:40; }
-.btn{ padding:10px 14px; border-radius:10px; background: linear-gradient(#fff,#f4efe4); border:1px solid rgba(0,0,0,0.06); font-weight:700; cursor:pointer; box-shadow: 0 10px 24px rgba(0,0,0,0.18); }
+.controls{ position:absolute; bottom:-66px; left:50%; transform:translateX(-50%); display:flex; gap:12px; z-index:400; }
+.btn{ padding:10px 14px; border-radius:10px; background: linear-gradient(#fff,#f4efe4); border:1px solid rgba(0,0,0,0.06); font-weight:700; cursor:pointer; box-shadow:0 12px 30px rgba(0,0,0,0.16); }
 
 /* small responsive */
-@media (max-width:900px){
-  .book{ width:86vw; height:64vw; }
-  .controls{ bottom:-70px; }
+@media (max-width:980px){
+  :root{ --book-width:88vw; --book-height:56vw; }
+  .controls{ bottom:-80px; }
   .col .midtext{ font-size:0.95rem; }
+}
+@media (max-width:520px){
+  .col img{ max-height:30%; }
+  :root{ --leaf-thick:6px; }
 }
 </style>
 </head>
 <body>
   <div class="scene">
-    <div class="book-wrap">
+    <div class="book-wrap" role="application" aria-label="Libro de regalo">
       <div class="book-shadow" aria-hidden="true"></div>
-      <div class="book" id="book">
 
+      <div class="book" id="book" aria-hidden="false">
         <div class="spine" aria-hidden="true"></div>
 
-        <div class="stack" id="stack">
-          <!-- Cover (leaf 0) -->
+        <div class="stack" id="stack" aria-hidden="false">
+          <!-- Leaf 0: Cover -->
           <div class="leaf cover" data-index="0" aria-label="Portada">
             <div class="face">
               <div style="width:100%; text-align:center;">
-                <h1 style="margin:0; font-size:2.4rem; color:var(--gold); text-shadow:0 3px 6px rgba(0,0,0,0.6);">Henia Cisneros</h1>
-                <p style="margin:10px 0 0 0; color:rgba(255,235,180,0.95); font-size:1rem;">Con todo mi cariño en tu cumpleaños</p>
+                <h1 style="margin:0; font-size:2.6rem; color:var(--gold); text-shadow:0 4px 10px rgba(0,0,0,0.6);">Henia Cisneros</h1>
+                <p style="margin:14px 0 0 0; color:rgba(255,235,180,0.95); font-size:1.05rem;">Con todo mi cariño en tu cumpleaños</p>
               </div>
             </div>
             <div class="back">
-              <!-- back of cover can be blank or show inner pattern -->
-              <div style="text-align:center; color:#6b574a;">&nbsp;</div>
+              <!-- blank inner cover back -->
+              <div style="width:100%; height:100%"></div>
             </div>
           </div>
 
-          <!-- Leaf 1 (first inner sheet) -->
-          <div class="leaf" data-index="1">
+          <!-- Leaf 1 -->
+          <div class="leaf" data-index="1" aria-label="Hoja 1">
             <div class="face">
               <div class="col">
-                <img src="img/pagina1a.jpg" alt="foto izquierda 1" />
+                <img src="img/pagina1_left.jpg" alt="izquierda 1">
                 <div class="midtext">Foto izquierda 1</div>
               </div>
               <div class="col">
-                <img src="img/pagina1b.jpg" alt="foto derecha 1" />
+                <img src="img/pagina1_right.jpg" alt="derecha 1">
                 <div class="midtext">Foto derecha 1</div>
               </div>
             </div>
             <div class="back">
-              <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; color:#3b2d26;">
-                <p style="max-width:60%; text-align:center;">Breve texto o dedicatoria entre las fotos.</p>
+              <div style="display:flex; align-items:center; justify-content:center; height:100%;">
+                <p style="max-width:70%; text-align:center; color:#3b2d26;">Un recuerdo especial que atesoramos.</p>
               </div>
             </div>
           </div>
 
           <!-- Leaf 2 -->
-          <div class="leaf" data-index="2">
+          <div class="leaf" data-index="2" aria-label="Hoja 2">
             <div class="face">
               <div class="col">
-                <img src="img/pagina2a.jpg" alt="foto izquierda 2" />
+                <img src="img/pagina2_left.jpg" alt="izquierda 2">
                 <div class="midtext">Foto izquierda 2</div>
               </div>
               <div class="col">
-                <img src="img/pagina2b.jpg" alt="foto derecha 2" />
+                <img src="img/pagina2_right.jpg" alt="derecha 2">
                 <div class="midtext">Foto derecha 2</div>
               </div>
             </div>
             <div class="back">
-              <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; color:#3b2d26;">
-                <p style="max-width:60%; text-align:center;">Otro texto bonito o recuerdo.</p>
+              <div style="display:flex; align-items:center; justify-content:center; height:100%;">
+                <p style="max-width:70%; text-align:center; color:#3b2d26;">Otro recuerdo lleno de cariño.</p>
               </div>
             </div>
           </div>
 
-          <!-- Final leaf with dedicatoria as right-hand content -->
-          <div class="leaf" data-index="3">
+          <!-- Leaf 3: Dedicatoria -->
+          <div class="leaf" data-index="3" aria-label="Dedicatoria">
             <div class="face">
-              <div class="col" style="width:100%; display:flex; flex-direction:column; justify-content:center; align-items:center;">
-                <p style="font-size:1.05rem; color:#3b2d26; max-width:70%; text-align:center;">Que nunca falte la alegría y el amor en tu vida.</p>
-                <p style="margin-top:18px; font-weight:700;">Con cariño,<br>Manuel</p>
+              <div class="center">
+                <div style="max-width:72%; text-align:center;">
+                  <p style="font-size:1.05rem; color:#3b2d26; margin:0 0 12px 0;">Que nunca falte la alegría y el amor en tu vida.</p>
+                  <p style="font-weight:700; margin:8px 0 0 0;">Con cariño,<br>Manuel</p>
+                </div>
               </div>
             </div>
             <div class="back">
-              <div style="text-align:center; color:#6b574a;">&nbsp;</div>
+              <div style="width:100%; height:100%"></div>
             </div>
           </div>
 
-          <!-- Backcover (last) -->
+          <!-- Leaf 4: Backcover -->
           <div class="leaf backcover" data-index="4" aria-label="Contraportada">
-            <div class="face" style="background: linear-gradient(180deg,var(--leather-2),var(--leather-1)); border-radius:8px; border:3px solid rgba(0,0,0,0.28); color:var(--gold); display:flex; align-items:center; justify-content:center;">
-              <div style="text-align:center;">
-                <div style="font-size:1rem; color:rgba(255,235,180,0.92)">&nbsp;</div>
-              </div>
+            <div class="face" style="display:flex; align-items:center; justify-content:center;">
+              <div style="text-align:center; color:rgba(255,235,180,0.95);"> &nbsp; </div>
             </div>
             <div class="back">
-              <div style="text-align:center; color:#6b574a;"></div>
+              <div></div>
             </div>
           </div>
         </div><!-- /stack -->
       </div><!-- /book -->
 
       <!-- controls -->
-      <div class="controls" aria-hidden="false" id="controls">
+      <div class="controls" id="controls" aria-hidden="false">
         <button class="btn" id="prevBtn">⟵ Atrás</button>
         <button class="btn" id="nextBtn">Siguiente ⟶</button>
         <button class="btn" id="resetBtn">⤺ Reiniciar</button>
@@ -222,7 +227,7 @@ html,body{height:100%;margin:0;font-family: 'Cormorant Garamond', Georgia, serif
 
 <script>
 (function(){
-  // Elements
+  // elements
   const stack = document.getElementById('stack');
   const leaves = Array.from(stack.querySelectorAll('.leaf'));
   const prevBtn = document.getElementById('prevBtn');
@@ -232,30 +237,40 @@ html,body{height:100%;margin:0;font-family: 'Cormorant Garamond', Georgia, serif
   const pageSound = document.getElementById('pageSound');
   const bgMusic = document.getElementById('bgMusic');
 
-  // We use an order such that 0 = cover, 1..N = inner leaves, last = backcover
-  // Current counts how many leaves have been flipped (0..leaves.length)
-  let current = 0;
+  let current = 0;            // how many leaves flipped
   let audioOn = false;
   let isAnimating = false;
 
-  // Setup initial z-index stacking: cover highest
-  function initStack(){
-    // highest z for cover, then decreasing
+  // initialize stacking and state
+  function init(){
+    // highest z for cover, decreasing with each leaf
     for(let i=0;i<leaves.length;i++){
-      const z = 1000 - i; // cover gets 1000, next 999, ...
-      leaves[i].style.zIndex = z;
-      // ensure no flipped class initially
+      leaves[i].style.zIndex = 1000 - i;
       leaves[i].classList.remove('flipped');
-      // minor GPU hint
-      leaves[i].style.transform = 'translateZ(0.01px)';
+      leaves[i].style.transform = 'rotateY(0deg)';
+      leaves[i].style.transition = 'transform 820ms cubic-bezier(.2,.9,.25,1), box-shadow 300ms';
+      leaves[i].style.willChange = 'transform';
     }
-    // make sure backcover starts rotated (hidden)
-    const back = leaves[leaves.length-1];
-    back.style.transform = 'rotateY(180deg)';
+    // backcover start rotated (hidden behind)
+    const last = leaves[leaves.length - 1];
+    last.style.transform = 'rotateY(0deg)'; // backcover remains in stack as last leaf (we flip it too)
+    current = 0;
   }
-  initStack();
+  init();
 
-  // helper: play page sound only if audioOn
+  // preload images so flipping isn't delayed by image loads
+  function preloadImages(){
+    const imgs = Array.from(document.querySelectorAll('.face img'));
+    return Promise.all(imgs.map(img=>{
+      return new Promise(res=>{
+        if(!img || !img.src) return res();
+        const i = new Image();
+        i.onload = i.onerror = res;
+        i.src = img.src;
+      });
+    }));
+  }
+
   function playPageSound(){
     try{
       if(audioOn && pageSound){
@@ -265,73 +280,75 @@ html,body{height:100%;margin:0;font-family: 'Cormorant Garamond', Georgia, serif
     }catch(e){}
   }
 
-  // Flip next leaf (from front to back)
+  // flip next: flip leaves[current]
   function flipNext(){
     if(isAnimating) return;
     if(current >= leaves.length) return;
-    const leaf = leaves[current];
     isAnimating = true;
-    // raise z to top to avoid overlap
+    const leaf = leaves[current];
+    // raise leaf to top for animation
     leaf.style.zIndex = 2000;
-    // add flipped class which rotates around Y to -180deg
-    leaf.classList.add('flipped');
-    // also apply transform explicitly to support some browsers
-    leaf.style.transform = 'rotateY(-180deg)';
+    // trigger flip
+    requestAnimationFrame(()=>{ leaf.classList.add('flipped'); leaf.style.transform = 'rotateY(-180deg)'; });
     playPageSound();
-    // timing must match CSS transition (820ms)
-    setTimeout(()=>{
-      // after flip, push leaf behind by setting a low z-index
+    // wait for transition end (safe timeout fallback)
+    const onEnd = (ev)=>{
+      if(ev && ev.target !== leaf) return;
+      leaf.removeEventListener('transitionend', onEnd);
+      // push behind after flip
       leaf.style.zIndex = 10 + current;
       current++;
       isAnimating = false;
-      // if we flipped the last real leaf (before backcover), ensure backcover becomes visible
-      if(current === leaves.length){
-        // show backcover (last leaf) frontally — but we already flipped all leaves
-        // nothing extra needed because last leaf was flipped
-      }
-    }, 840);
+    };
+    leaf.addEventListener('transitionend', onEnd);
+    // fallback (in case transitionend doesn't fire)
+    setTimeout(()=>{ if(isAnimating){ leaf.removeEventListener('transitionend', onEnd); leaf.style.zIndex = 10 + current; current++; isAnimating=false; } }, 900);
   }
 
-  // Flip previous (unflip last flipped)
+  // flip previous: unflip last flipped
   function flipPrev(){
     if(isAnimating) return;
     if(current <= 0) return;
     isAnimating = true;
-    // target leaf to unflip is current-1
     const idx = current - 1;
     const leaf = leaves[idx];
-    // bring it forward temporarily
+    // bring leaf to front
     leaf.style.zIndex = 2000;
-    // remove flipped class (CSS will animate rotation back to 0)
-    leaf.classList.remove('flipped');
-    leaf.style.transform = 'rotateY(0deg)';
+    // unflip
+    requestAnimationFrame(()=>{ leaf.classList.remove('flipped'); leaf.style.transform = 'rotateY(0deg)'; });
     playPageSound();
-    setTimeout(()=>{
-      // restore stacking order
-      initStack();
-      current = idx;
+    const onEnd = (ev)=>{
+      if(ev && ev.target !== leaf) return;
+      leaf.removeEventListener('transitionend', onEnd);
+      // restore stacking (re-init safe)
+      init();
       isAnimating = false;
-    }, 840);
+    };
+    leaf.addEventListener('transitionend', onEnd);
+    setTimeout(()=>{ if(isAnimating){ leaf.removeEventListener('transitionend', onEnd); init(); isAnimating=false; } }, 900);
+    current = idx;
   }
 
-  // Reset book
+  // reset all
   function resetBook(){
     if(isAnimating) return;
     isAnimating = true;
-    // remove flipped on all leaves
-    leaves.forEach(l => { l.classList.remove('flipped'); l.style.transform = 'rotateY(0deg)'; });
-    // reset current and stacking
-    setTimeout(()=>{ initStack(); current = 0; isAnimating = false; }, 420);
+    leaves.forEach((leaf, i)=>{
+      leaf.classList.remove('flipped');
+      leaf.style.transform = 'rotateY(0deg)';
+      leaf.style.zIndex = 1000 - i;
+    });
+    setTimeout(()=>{ init(); isAnimating = false; }, 420);
   }
 
-  // audio toggle - bg music loops
+  // audio toggle
   function toggleAudio(){
     audioOn = !audioOn;
     if(audioOn){
       bgMusic.volume = 0.22;
       bgMusic.play().catch(()=>{});
       audioBtn.textContent = '🔊 Música ON';
-      // small page sound to signal start
+      // small chime
       try{ pageSound.currentTime = 0; pageSound.play().catch(()=>{}); }catch(e){}
     } else {
       bgMusic.pause();
@@ -339,27 +356,27 @@ html,body{height:100%;margin:0;font-family: 'Cormorant Garamond', Georgia, serif
     }
   }
 
-  // wire buttons
+  // events
   nextBtn.addEventListener('click', flipNext);
   prevBtn.addEventListener('click', flipPrev);
   resetBtn.addEventListener('click', resetBook);
   audioBtn.addEventListener('click', toggleAudio);
 
-  // click on stack: right side next, left side prev, center toggles next
+  // click on stack: right side next, left prev, center next
   stack.addEventListener('click', (ev)=>{
     if(isAnimating) return;
     const rect = stack.getBoundingClientRect();
     const x = ev.clientX - rect.left;
-    if(x > rect.width * 0.6) flipNext();
-    else if(x < rect.width * 0.4) flipPrev();
+    if(x > rect.width * 0.62) flipNext();
+    else if(x < rect.width * 0.38) flipPrev();
     else flipNext();
   });
 
-  // swipe support (mobile)
+  // touch swipe
   let startX = 0, startY = 0, moved = false;
-  stack.addEventListener('touchstart', (e)=>{ const t = e.touches[0]; startX = t.clientX; startY = t.clientY; moved=false; }, {passive:true});
+  stack.addEventListener('touchstart',(e)=>{ const t=e.touches[0]; startX=t.clientX; startY=t.clientY; moved=false; }, {passive:true});
   stack.addEventListener('touchmove', ()=>{ moved=true; }, {passive:true});
-  stack.addEventListener('touchend', (e)=>{
+  stack.addEventListener('touchend',(e)=>{
     if(isAnimating) return;
     const t = e.changedTouches[0];
     const dx = t.clientX - startX, dy = t.clientY - startY;
@@ -371,41 +388,26 @@ html,body{height:100%;margin:0;font-family: 'Cormorant Garamond', Georgia, serif
     }
   }, {passive:true});
 
-  // keyboard arrows
+  // keyboard
   document.addEventListener('keydown', (e)=>{
     if(isAnimating) return;
     if(e.key === 'ArrowRight') flipNext();
     if(e.key === 'ArrowLeft') flipPrev();
   });
 
-  // Preload images (so flipping isn't delayed)
-  function preloadImgs(){
-    const imgs = Array.from(document.querySelectorAll('.face img'));
-    const promises = imgs.map(img=>{
-      return new Promise(res => {
-        if(!img.src) return res();
-        const i = new Image();
-        i.onload = i.onerror = res;
-        i.src = img.src;
-      });
-    });
-    return Promise.all(promises);
-  }
-
-  // initial: preload, then small auto-open (cover tilt) and allow music try
-  preloadImgs().then(()=>{
-    // tiny tilt to cue opening (cover is leaves[0])
+  // preload then small cover cue and try music autoplay
+  preloadImages().then(()=>{
+    // little cover wiggle to invite interaction
     const coverLeaf = leaves[0];
     coverLeaf.style.transition = 'transform 700ms cubic-bezier(.2,.9,.25,1)';
-    setTimeout(()=>{ coverLeaf.style.transform = 'rotateY(-40deg) translateZ(0.02px)'; playPageSound(); }, 600);
-    setTimeout(()=>{ coverLeaf.style.transform = 'rotateY(0deg)'; }, 1100);
-    // try autoplay music (browsers may block)
+    setTimeout(()=>{ coverLeaf.style.transform = 'rotateY(-28deg) translateZ(0.02px)'; playPageSound(); }, 600);
+    setTimeout(()=>{ coverLeaf.style.transform = 'rotateY(0deg) translateZ(0.02px)'; }, 1200);
+    // try autoplay music (may be blocked on mobile)
     bgMusic.volume = 0.22;
-    bgMusic.play().then(()=>{ audioOn = true; audioBtn.textContent='🔊 Música ON'; }).catch(()=>{ /* blocked */ });
+    bgMusic.play().then(()=>{ audioOn = true; audioBtn.textContent='🔊 Música ON'; }).catch(()=>{/*blocked*/});
   });
 
 })();
 </script>
 </body>
 </html>
-
