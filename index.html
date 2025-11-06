@@ -3,221 +3,169 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Henia Cisneros — Libro (Final)</title>
+<title>Henia Cisneros — Libro (versión final corregida)</title>
 <style>
 :root{
-  --desk-1:#5a3d2a;
-  --desk-2:#8a6242;
-  --leather-1:#32171f;
-  --leather-2:#4a2330;
+  --desk-1:#5a3d2a; --desk-2:#8a6242;
+  --leather-1:#32171f; --leather-2:#4a2330;
   --gold:#c9a84f;
-  --paper:#fbf6ec;
-  --paper-edge:#e5d6bf;
-  --stitch:#d2b27a;
-  --shadow: rgba(0,0,0,0.45);
+  --paper:#fbf6ec; --paper-edge:#e5d6bf;
   --leaf-thick:8px;
-  --book-width:720px; /* base width (will be responsive) */
-  --book-height:470px;
+  --book-w:760px; --book-h:460px;
 }
 
-/* reset */
+/* Reset */
 *{box-sizing:border-box}
-html,body{height:100%;margin:0;font-family: 'Cormorant Garamond', Georgia, serif;background: linear-gradient(180deg,var(--desk-1),var(--desk-2));display:flex;align-items:center;justify-content:center;overflow:hidden;color:#2f241f}
+html,body{height:100%;margin:0;font-family: 'Cormorant Garamond', Georgia, serif;
+  background: linear-gradient(180deg,var(--desk-1),var(--desk-2));
+  display:flex;align-items:center;justify-content:center;overflow:hidden;color:#2f241f}
 
-/* Scene (desk) */
-.scene{
-  width:94vw; max-width:1280px; height:86vh; max-height:880px; position:relative; display:flex; align-items:center; justify-content:center; padding:24px;
-}
-.scene::before{
-  content:""; position:absolute; inset:0; border-radius:12px;
-  background-image: url('https://images.unsplash.com/photo-1505691723518-36a45b89acb1?auto=format&fit=crop&w=1600&q=80');
-  background-size:cover; background-position:center; opacity:0.10; mix-blend-mode:multiply; z-index:0;
-}
+/* Scene */
+.scene{ width:94vw; max-width:1280px; height:86vh; display:flex;align-items:center;justify-content:center; padding:24px; perspective:2800px; }
 
-/* Book wrapper and shadow */
-.book-wrap{ width:calc(var(--book-width)); height:calc(var(--book-height)); max-width:92%; max-height:86%; perspective:3000px; position:relative; z-index:10; display:flex; align-items:center; justify-content:center; }
-.book-shadow{ position:absolute; bottom:4%; width:58%; height:26px; background: radial-gradient(closest-side, rgba(0,0,0,0.6), transparent); filter: blur(20px); z-index:2; }
+/* Book wrapper */
+.book-wrap{ width:var(--book-w); height:var(--book-h); max-width:92%; max-height:86%; position:relative; transform: rotateX(6deg); }
+/* subtle desk texture */
+.book-wrap::before{ content:""; position:absolute; inset:-40px; background:url('https://images.unsplash.com/photo-1505691723518-36a45b89acb1?auto=format&fit=crop&w=1600&q=80') center/cover; opacity:0.08; z-index:0; border-radius:10px; }
 
-/* Book container (spine centered) */
-.book{ width:100%; height:100%; position:relative; transform-style:preserve-3d; pointer-events:auto; }
+/* shadow under book */
+.book-shadow{ position:absolute; left:50%; transform:translateX(-50%); bottom:-22px; width:70%; height:34px; background: radial-gradient(closest-side, rgba(0,0,0,0.6), transparent); filter:blur(22px); z-index:1; }
 
-/* spine (lomo) */
-.spine{ position:absolute; left:50%; top:6px; width:26px; height:calc(100% - 12px); transform:translateX(-50%); background: linear-gradient(180deg,#2b161b,#4a2a36); border-radius:6px; box-shadow: inset 0 2px 6px rgba(255,255,255,0.02); z-index:200; pointer-events:none; }
+/* Book (stack centered on spine) */
+.book{ width:100%; height:100%; position:relative; transform-style:preserve-3d; z-index:10; }
 
-/* Stack (all leaves centered on spine) */
-.stack{ position:absolute; inset:0; left:50%; transform:translateX(-50%); width:100%; height:100%; transform-style:preserve-3d; }
+/* spine behind (ensure it's BELOW cover by z-index) */
+.spine{ position:absolute; left:50%; top:8px; width:28px; height:calc(100% - 16px); transform:translateX(-50%); background: linear-gradient(180deg,#2b161b,#4a2a36); border-radius:6px; z-index:50; box-shadow: inset 0 2px 6px rgba(255,255,255,0.02); pointer-events:none; opacity:0.95; }
 
-/* Generic leaf (a physical sheet) */
-.leaf{
-  position:absolute; left:0; top:0; width:100%; height:100%;
-  transform-style:preserve-3d; backface-visibility:hidden;
-  transition: transform 820ms cubic-bezier(.2,.9,.25,1), box-shadow 300ms;
-  will-change: transform;
-  cursor:pointer;
-}
+/* stack (all leaves) centered on spine */
+.stack{ position:absolute; inset:0; left:50%; transform:translateX(-50%); width:100%; height:100%; transform-style:preserve-3d; z-index:100; }
 
-/* visual edge thickness */
-.leaf::after{
-  content:""; position:absolute; right:-var(--leaf-thick); top:6px; bottom:6px; width:var(--leaf-thick);
-  background: linear-gradient(180deg, rgba(0,0,0,0.06), rgba(0,0,0,0.02));
-  border-radius:3px; transform: translateZ(0.02px);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.02);
-}
+/* leaf (a physical sheet) */
+.leaf{ position:absolute; left:0; top:0; width:100%; height:100%; transform-style:preserve-3d; backface-visibility:hidden;
+  transition: transform 780ms cubic-bezier(.2,.9,.25,1), box-shadow 240ms; will-change:transform; cursor:pointer; }
+
+/* thickness edge on right (visible when closed) */
+.leaf::after{ content:""; position:absolute; right:-var(--leaf-thick); top:6px; bottom:6px; width:var(--leaf-thick);
+  background: linear-gradient(180deg, rgba(0,0,0,0.06), rgba(0,0,0,0.02)); border-radius:3px; }
 
 /* face (front) */
-.face{
-  position:absolute; inset:0; padding:18px; box-sizing:border-box; border-radius:8px;
-  display:flex; gap:12px; align-items:center; justify-content:space-between; backface-visibility:hidden;
-  background: linear-gradient(180deg, var(--paper), #f6eadc);
-  border:1px solid rgba(0,0,0,0.06);
-}
+.face{ position:absolute; inset:0; padding:20px; box-sizing:border-box; border-radius:8px;
+  display:flex; gap:16px; align-items:center; justify-content:space-between;
+  background: linear-gradient(180deg,var(--paper), #f6eadc);
+  border:1px solid rgba(0,0,0,0.06); backface-visibility:hidden; }
 
-/* backside (when leaf is flipped, we show backface which is rotated 180) */
-.back{
-  position:absolute; inset:0; padding:18px; box-sizing:border-box; border-radius:8px;
-  display:flex; align-items:center; justify-content:center; background: linear-gradient(180deg, var(--paper), #f6eadc);
-  border:1px solid rgba(0,0,0,0.04);
-  transform: rotateY(180deg);
-  backface-visibility:hidden;
-}
+/* backface (content when leaf flipped) */
+.back{ position:absolute; inset:0; padding:20px; box-sizing:border-box; border-radius:8px; display:flex; align-items:center; justify-content:center;
+  background: linear-gradient(180deg,var(--paper), #f6eadc); transform:rotateY(180deg); backface-visibility:hidden; }
 
-/* Cover styling (first leaf) */
-.leaf.cover .face{
-  background: linear-gradient(180deg, var(--leather-1), var(--leather-2));
-  color:var(--gold); border-radius:10px; border:3px solid rgba(0,0,0,0.36);
-  box-shadow: 0 20px 70px rgba(0,0,0,0.55), inset 0 6px 18px rgba(255,255,255,0.02);
-  display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;
-}
-.leaf.backcover .face{
-  background: linear-gradient(180deg, var(--leather-2), var(--leather-1));
-  border-radius:10px; border:3px solid rgba(0,0,0,0.34);
-}
+/* cover styling (leaf 0) */
+.leaf.cover .face{ background: linear-gradient(180deg,var(--leather-1),var(--leather-2)); color:var(--gold); border-radius:10px; border:3px solid rgba(0,0,0,0.36);
+  box-shadow: 0 20px 70px rgba(0,0,0,0.55), inset 0 6px 18px rgba(255,255,255,0.02); display:flex; align-items:center; justify-content:center; flex-direction:column; text-align:center; }
 
-/* columns inside face (left & right) */
-.col{ width:48%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; gap:12px; text-align:center; padding:6px; box-sizing:border-box; }
-.col img{ width:100%; height:auto; max-height:48%; object-fit:cover; border-radius:8px; box-shadow:0 6px 18px rgba(0,0,0,0.12) inset; }
-.col .midtext{ color:#3b2d26; font-size:1rem; line-height:1.45; }
+/* backcover style */
+.leaf.backcover .face{ background: linear-gradient(180deg,var(--leather-2),var(--leather-1)); border-radius:10px; border:3px solid rgba(0,0,0,0.34); }
 
-/* center column for single-column pages (dedicatoria) */
-.center{ width:100%; display:flex; align-items:center; justify-content:center; padding:0 24px; }
+/* columns */
+.col{ width:48%; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; gap:10px; text-align:center; }
+.col img{ width:100%; height:auto; max-height:48%; object-fit:cover; border-radius:8px; box-shadow: 0 6px 18px rgba(0,0,0,0.12) inset; }
+.midtext{ color:#3b2d26; font-size:1rem; line-height:1.45; }
 
-/* flipped state (rotate around spine) */
-.leaf.flipped{ transform: rotateY(-180deg); box-shadow: 0 6px 40px rgba(0,0,0,0.1); }
+/* center column for single-column pages */
+.center{ width:100%; display:flex; align-items:center; justify-content:center; }
 
-/* interactive hover micro-lift for realism */
-.leaf:not(.flipped):hover{ transform: translateZ(6px) rotateY(0deg); box-shadow: 0 18px 60px rgba(0,0,0,0.28); }
+/* flipped class rotates leaf around spine to show back */
+.leaf.flipped{ transform: rotateY(-180deg); box-shadow: 0 6px 40px rgba(0,0,0,0.08); }
 
-/* controls */
-.controls{ position:absolute; bottom:-66px; left:50%; transform:translateX(-50%); display:flex; gap:12px; z-index:400; }
-.btn{ padding:10px 14px; border-radius:10px; background: linear-gradient(#fff,#f4efe4); border:1px solid rgba(0,0,0,0.06); font-weight:700; cursor:pointer; box-shadow:0 12px 30px rgba(0,0,0,0.16); }
+/* ensure cover sits above everything when closed */
+.leaf.cover{ z-index:1200; }
 
-/* small responsive */
-@media (max-width:980px){
-  :root{ --book-width:88vw; --book-height:56vw; }
-  .controls{ bottom:-80px; }
-  .col .midtext{ font-size:0.95rem; }
-}
-@media (max-width:520px){
-  .col img{ max-height:30%; }
-  :root{ --leaf-thick:6px; }
-}
+/* micro-lift hover */
+.leaf:not(.flipped):hover{ transform: translateZ(8px); }
+
+/* controls under book */
+.controls{ position:absolute; left:50%; transform:translateX(-50%); bottom:-80px; display:flex; gap:12px; z-index:600; }
+.btn{ padding:10px 14px; border-radius:10px; background: linear-gradient(#fff,#f4efe4); border:1px solid rgba(0,0,0,0.06); font-weight:700; cursor:pointer; box-shadow: 0 10px 28px rgba(0,0,0,0.16); }
+
+/* responsive tweaks */
+@media (max-width:960px){ :root{ --book-w:88vw; --book-h:56vw; } .controls{ bottom:-96px; } }
+@media (max-width:520px){ .col img{ max-height:32%; } :root{ --leaf-thick:6px; } }
 </style>
 </head>
 <body>
   <div class="scene">
-    <div class="book-wrap" role="application" aria-label="Libro de regalo">
+    <div class="book-wrap" id="bookWrap" aria-label="Libro de regalo">
       <div class="book-shadow" aria-hidden="true"></div>
 
-      <div class="book" id="book" aria-hidden="false">
+      <div class="book" id="book">
         <div class="spine" aria-hidden="true"></div>
 
-        <div class="stack" id="stack" aria-hidden="false">
-          <!-- Leaf 0: Cover -->
+        <div class="stack" id="stack">
+          <!-- Cover (leaf 0) -->
           <div class="leaf cover" data-index="0" aria-label="Portada">
             <div class="face">
               <div style="width:100%; text-align:center;">
-                <h1 style="margin:0; font-size:2.6rem; color:var(--gold); text-shadow:0 4px 10px rgba(0,0,0,0.6);">Henia Cisneros</h1>
-                <p style="margin:14px 0 0 0; color:rgba(255,235,180,0.95); font-size:1.05rem;">Con todo mi cariño en tu cumpleaños</p>
+                <h1 style="margin:0; font-size:2.8rem; color:var(--gold); text-shadow:0 4px 10px rgba(0,0,0,0.6);">Henia Cisneros</h1>
+                <p style="margin:12px 0 0 0; color:rgba(255,235,180,0.95); font-size:1.05rem;">Con todo mi cariño en tu cumpleaños</p>
               </div>
             </div>
-            <div class="back">
-              <!-- blank inner cover back -->
-              <div style="width:100%; height:100%"></div>
-            </div>
+            <div class="back"><div style="width:100%;height:100%"></div></div>
           </div>
 
           <!-- Leaf 1 -->
           <div class="leaf" data-index="1" aria-label="Hoja 1">
             <div class="face">
               <div class="col">
-                <img src="img/pagina1_left.jpg" alt="izquierda 1">
-                <div class="midtext">Foto izquierda 1</div>
+                <img src="img/pagina1_left.jpg" alt="izq 1"><div class="midtext">Foto izquierda 1</div>
               </div>
               <div class="col">
-                <img src="img/pagina1_right.jpg" alt="derecha 1">
-                <div class="midtext">Foto derecha 1</div>
+                <img src="img/pagina1_right.jpg" alt="der 1"><div class="midtext">Foto derecha 1</div>
               </div>
             </div>
-            <div class="back">
-              <div style="display:flex; align-items:center; justify-content:center; height:100%;">
-                <p style="max-width:70%; text-align:center; color:#3b2d26;">Un recuerdo especial que atesoramos.</p>
-              </div>
-            </div>
+            <div class="back"><div style="text-align:center; color:#3b2d26;">Breve texto o dedicatoria (reverso).</div></div>
           </div>
 
           <!-- Leaf 2 -->
           <div class="leaf" data-index="2" aria-label="Hoja 2">
             <div class="face">
               <div class="col">
-                <img src="img/pagina2_left.jpg" alt="izquierda 2">
-                <div class="midtext">Foto izquierda 2</div>
+                <img src="img/pagina2_left.jpg" alt="izq 2"><div class="midtext">Foto izquierda 2</div>
               </div>
               <div class="col">
-                <img src="img/pagina2_right.jpg" alt="derecha 2">
-                <div class="midtext">Foto derecha 2</div>
+                <img src="img/pagina2_right.jpg" alt="der 2"><div class="midtext">Foto derecha 2</div>
               </div>
             </div>
-            <div class="back">
-              <div style="display:flex; align-items:center; justify-content:center; height:100%;">
-                <p style="max-width:70%; text-align:center; color:#3b2d26;">Otro recuerdo lleno de cariño.</p>
-              </div>
-            </div>
+            <div class="back"><div style="text-align:center; color:#3b2d26;">Otro texto bonito (reverso).</div></div>
           </div>
 
-          <!-- Leaf 3: Dedicatoria -->
+          <!-- Leaf 3 (dedicatoria) -->
           <div class="leaf" data-index="3" aria-label="Dedicatoria">
             <div class="face">
               <div class="center">
                 <div style="max-width:72%; text-align:center;">
-                  <p style="font-size:1.05rem; color:#3b2d26; margin:0 0 12px 0;">Que nunca falte la alegría y el amor en tu vida.</p>
+                  <p style="font-size:1.05rem; margin:0 0 10px 0; color:#3b2d26;">Que nunca falte la alegría y el amor en tu vida.</p>
                   <p style="font-weight:700; margin:8px 0 0 0;">Con cariño,<br>Manuel</p>
                 </div>
               </div>
             </div>
-            <div class="back">
-              <div style="width:100%; height:100%"></div>
-            </div>
+            <div class="back"><div></div></div>
           </div>
 
-          <!-- Leaf 4: Backcover -->
+          <!-- Backcover (leaf last) -->
           <div class="leaf backcover" data-index="4" aria-label="Contraportada">
-            <div class="face" style="display:flex; align-items:center; justify-content:center;">
-              <div style="text-align:center; color:rgba(255,235,180,0.95);"> &nbsp; </div>
-            </div>
-            <div class="back">
-              <div></div>
-            </div>
+            <div class="face"><div style="text-align:center; color:rgba(255,235,180,0.92)">&nbsp;</div></div>
+            <div class="back"><div></div></div>
           </div>
         </div><!-- /stack -->
       </div><!-- /book -->
 
       <!-- controls -->
-      <div class="controls" id="controls" aria-hidden="false">
+      <div class="controls" id="controls">
         <button class="btn" id="prevBtn">⟵ Atrás</button>
         <button class="btn" id="nextBtn">Siguiente ⟶</button>
         <button class="btn" id="resetBtn">⤺ Reiniciar</button>
         <button class="btn" id="audioBtn">🔈 Música</button>
       </div>
+
     </div>
   </div>
 
@@ -227,7 +175,6 @@ html,body{height:100%;margin:0;font-family: 'Cormorant Garamond', Georgia, serif
 
 <script>
 (function(){
-  // elements
   const stack = document.getElementById('stack');
   const leaves = Array.from(stack.querySelectorAll('.leaf'));
   const prevBtn = document.getElementById('prevBtn');
@@ -237,133 +184,101 @@ html,body{height:100%;margin:0;font-family: 'Cormorant Garamond', Georgia, serif
   const pageSound = document.getElementById('pageSound');
   const bgMusic = document.getElementById('bgMusic');
 
-  let current = 0;            // how many leaves flipped
+  let current = 0;
   let audioOn = false;
   let isAnimating = false;
 
-  // initialize stacking and state
   function init(){
-    // highest z for cover, decreasing with each leaf
+    // cover must be on top when closed
     for(let i=0;i<leaves.length;i++){
-      leaves[i].style.zIndex = 1000 - i;
+      const z = 1200 - i;
+      leaves[i].style.zIndex = z;
       leaves[i].classList.remove('flipped');
       leaves[i].style.transform = 'rotateY(0deg)';
-      leaves[i].style.transition = 'transform 820ms cubic-bezier(.2,.9,.25,1), box-shadow 300ms';
+      leaves[i].style.transition = 'transform 780ms cubic-bezier(.2,.9,.25,1), box-shadow 240ms';
       leaves[i].style.willChange = 'transform';
     }
-    // backcover start rotated (hidden behind)
-    const last = leaves[leaves.length - 1];
-    last.style.transform = 'rotateY(0deg)'; // backcover remains in stack as last leaf (we flip it too)
+    // ensure spine is behind cover (cover z higher)
+    // (spine is separate in CSS with lower z)
     current = 0;
   }
   init();
 
-  // preload images so flipping isn't delayed by image loads
+  // preload imgs
   function preloadImages(){
     const imgs = Array.from(document.querySelectorAll('.face img'));
     return Promise.all(imgs.map(img=>{
       return new Promise(res=>{
         if(!img || !img.src) return res();
-        const i = new Image();
-        i.onload = i.onerror = res;
-        i.src = img.src;
+        const i = new Image(); i.onload = i.onerror = res; i.src = img.src;
       });
     }));
   }
 
   function playPageSound(){
-    try{
-      if(audioOn && pageSound){
-        pageSound.currentTime = 0;
-        pageSound.play().catch(()=>{});
-      }
-    }catch(e){}
+    try{ if(audioOn){ pageSound.currentTime=0; pageSound.play().catch(()=>{}); } }catch(e){}
   }
 
-  // flip next: flip leaves[current]
   function flipNext(){
     if(isAnimating) return;
     if(current >= leaves.length) return;
     isAnimating = true;
     const leaf = leaves[current];
-    // raise leaf to top for animation
     leaf.style.zIndex = 2000;
-    // trigger flip
+    // flip
     requestAnimationFrame(()=>{ leaf.classList.add('flipped'); leaf.style.transform = 'rotateY(-180deg)'; });
     playPageSound();
-    // wait for transition end (safe timeout fallback)
-    const onEnd = (ev)=>{
+    const done = (ev) => {
       if(ev && ev.target !== leaf) return;
-      leaf.removeEventListener('transitionend', onEnd);
-      // push behind after flip
+      leaf.removeEventListener('transitionend', done);
       leaf.style.zIndex = 10 + current;
       current++;
       isAnimating = false;
     };
-    leaf.addEventListener('transitionend', onEnd);
-    // fallback (in case transitionend doesn't fire)
-    setTimeout(()=>{ if(isAnimating){ leaf.removeEventListener('transitionend', onEnd); leaf.style.zIndex = 10 + current; current++; isAnimating=false; } }, 900);
+    leaf.addEventListener('transitionend', done);
+    setTimeout(()=>{ if(isAnimating){ leaf.removeEventListener('transitionend', done); leaf.style.zIndex = 10 + current; current++; isAnimating=false; } }, 900);
   }
 
-  // flip previous: unflip last flipped
   function flipPrev(){
     if(isAnimating) return;
     if(current <= 0) return;
     isAnimating = true;
     const idx = current - 1;
     const leaf = leaves[idx];
-    // bring leaf to front
     leaf.style.zIndex = 2000;
-    // unflip
     requestAnimationFrame(()=>{ leaf.classList.remove('flipped'); leaf.style.transform = 'rotateY(0deg)'; });
     playPageSound();
-    const onEnd = (ev)=>{
+    const done = (ev) => {
       if(ev && ev.target !== leaf) return;
-      leaf.removeEventListener('transitionend', onEnd);
-      // restore stacking (re-init safe)
-      init();
+      leaf.removeEventListener('transitionend', done);
+      init(); // safe restore stacking
       isAnimating = false;
     };
-    leaf.addEventListener('transitionend', onEnd);
-    setTimeout(()=>{ if(isAnimating){ leaf.removeEventListener('transitionend', onEnd); init(); isAnimating=false; } }, 900);
+    leaf.addEventListener('transitionend', done);
+    setTimeout(()=>{ if(isAnimating){ leaf.removeEventListener('transitionend', done); init(); isAnimating=false; } }, 900);
     current = idx;
   }
 
-  // reset all
   function resetBook(){
     if(isAnimating) return;
     isAnimating = true;
-    leaves.forEach((leaf, i)=>{
-      leaf.classList.remove('flipped');
-      leaf.style.transform = 'rotateY(0deg)';
-      leaf.style.zIndex = 1000 - i;
-    });
-    setTimeout(()=>{ init(); isAnimating = false; }, 420);
+    leaves.forEach((leaf,i)=>{ leaf.classList.remove('flipped'); leaf.style.transform='rotateY(0deg)'; leaf.style.zIndex = 1200 - i; });
+    setTimeout(()=>{ init(); isAnimating=false; }, 420);
   }
 
-  // audio toggle
   function toggleAudio(){
     audioOn = !audioOn;
-    if(audioOn){
-      bgMusic.volume = 0.22;
-      bgMusic.play().catch(()=>{});
-      audioBtn.textContent = '🔊 Música ON';
-      // small chime
-      try{ pageSound.currentTime = 0; pageSound.play().catch(()=>{}); }catch(e){}
-    } else {
-      bgMusic.pause();
-      audioBtn.textContent = '🔈 Música';
-    }
+    if(audioOn){ bgMusic.volume = 0.22; bgMusic.play().catch(()=>{}); audioBtn.textContent='🔊 Música ON'; try{ pageSound.currentTime=0; pageSound.play().catch(()=>{}); }catch(e){} }
+    else { bgMusic.pause(); audioBtn.textContent='🔈 Música'; }
   }
 
-  // events
   nextBtn.addEventListener('click', flipNext);
   prevBtn.addEventListener('click', flipPrev);
   resetBtn.addEventListener('click', resetBook);
   audioBtn.addEventListener('click', toggleAudio);
 
-  // click on stack: right side next, left prev, center next
-  stack.addEventListener('click', (ev)=>{
+  // click on stack: right->next, left->prev
+  stack.addEventListener('click',(ev)=>{
     if(isAnimating) return;
     const rect = stack.getBoundingClientRect();
     const x = ev.clientX - rect.left;
@@ -373,41 +288,34 @@ html,body{height:100%;margin:0;font-family: 'Cormorant Garamond', Georgia, serif
   });
 
   // touch swipe
-  let startX = 0, startY = 0, moved = false;
-  stack.addEventListener('touchstart',(e)=>{ const t=e.touches[0]; startX=t.clientX; startY=t.clientY; moved=false; }, {passive:true});
+  let startX=0, startY=0, moved=false;
+  stack.addEventListener('touchstart', e=>{ const t=e.touches[0]; startX=t.clientX; startY=t.clientY; moved=false; }, {passive:true});
   stack.addEventListener('touchmove', ()=>{ moved=true; }, {passive:true});
-  stack.addEventListener('touchend',(e)=>{
+  stack.addEventListener('touchend', e=>{
     if(isAnimating) return;
     const t = e.changedTouches[0];
     const dx = t.clientX - startX, dy = t.clientY - startY;
-    const absDx = Math.abs(dx), absDy = Math.abs(dy);
-    if(absDx > 30 && absDx > absDy){
-      if(dx < 0) flipNext(); else flipPrev();
-    } else if(!moved){
-      flipNext();
-    }
+    if(Math.abs(dx) > 30 && Math.abs(dx) > Math.abs(dy)){ if(dx < 0) flipNext(); else flipPrev(); }
+    else if(!moved) flipNext();
   }, {passive:true});
 
   // keyboard
-  document.addEventListener('keydown', (e)=>{
-    if(isAnimating) return;
-    if(e.key === 'ArrowRight') flipNext();
-    if(e.key === 'ArrowLeft') flipPrev();
-  });
+  document.addEventListener('keydown', e=>{ if(isAnimating) return; if(e.key==='ArrowRight') flipNext(); if(e.key==='ArrowLeft') flipPrev(); });
 
-  // preload then small cover cue and try music autoplay
-  preloadImages().then(()=>{
-    // little cover wiggle to invite interaction
+  // init actions after preload
+  preloadImages().then(()=> {
+    // subtle cover wiggle to invite click
     const coverLeaf = leaves[0];
     coverLeaf.style.transition = 'transform 700ms cubic-bezier(.2,.9,.25,1)';
-    setTimeout(()=>{ coverLeaf.style.transform = 'rotateY(-28deg) translateZ(0.02px)'; playPageSound(); }, 600);
+    setTimeout(()=>{ coverLeaf.style.transform = 'rotateY(-24deg) translateZ(0.02px)'; playPageSound(); }, 600);
     setTimeout(()=>{ coverLeaf.style.transform = 'rotateY(0deg) translateZ(0.02px)'; }, 1200);
-    // try autoplay music (may be blocked on mobile)
+    // attempt autoplay music
     bgMusic.volume = 0.22;
-    bgMusic.play().then(()=>{ audioOn = true; audioBtn.textContent='🔊 Música ON'; }).catch(()=>{/*blocked*/});
+    bgMusic.play().then(()=>{ audioOn=true; audioBtn.textContent='🔊 Música ON'; }).catch(()=>{/*blocked*/});
   });
 
 })();
 </script>
 </body>
 </html>
+
