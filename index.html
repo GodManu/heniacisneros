@@ -3,109 +3,112 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Henia Cisneros — Libro (versión final corregida)</title>
+<title>Henia Cisneros — Libro Especial</title>
 <style>
 :root{
-  --desk-1:#5a3d2a; --desk-2:#8a6242;
-  --leather-1:#32171f; --leather-2:#4a2330;
-  --gold:#c9a84f;
-  --paper:#fbf6ec; --paper-edge:#e5d6bf;
-  --leaf-thick:8px;
+  --desk-1:#4f3424;
+  --desk-2:#8b6243;
+  --leather-1:#31161c;
+  --leather-2:#4a2632;
+  --gold:#caa84f;
+  --paper:#fbf6ec;
+  --shadow: rgba(0,0,0,0.45);
   --book-w:760px; --book-h:460px;
+  --leaf-thick:8px;
 }
 
 /* Reset */
 *{box-sizing:border-box}
-html,body{height:100%;margin:0;font-family: 'Cormorant Garamond', Georgia, serif;
-  background: linear-gradient(180deg,var(--desk-1),var(--desk-2));
-  display:flex;align-items:center;justify-content:center;overflow:hidden;color:#2f241f}
+html,body{height:100%;margin:0;font-family: 'Cormorant Garamond', Georgia, serif;background: linear-gradient(180deg,var(--desk-1),var(--desk-2));display:flex;align-items:center;justify-content:center;overflow:hidden;color:#2f241f}
 
 /* Scene */
-.scene{ width:94vw; max-width:1280px; height:86vh; display:flex;align-items:center;justify-content:center; padding:24px; perspective:2800px; }
+.scene{ width:94vw; max-width:1280px; height:86vh; display:flex;align-items:center;justify-content:center; padding:20px; perspective:3200px; position:relative; }
+.scene::before{ content:""; position:absolute; inset:0; background:url('https://images.unsplash.com/photo-1505691723518-36a45b89acb1?auto=format&fit=crop&w=1600&q=80') center/cover; opacity:0.08; z-index:0; border-radius:10px; }
+
+/* Particles canvas sits above background but below book */
+.particles{ position:absolute; inset:0; pointer-events:none; z-index:5; opacity:0.9; }
 
 /* Book wrapper */
-.book-wrap{ width:var(--book-w); height:var(--book-h); max-width:92%; max-height:86%; position:relative; transform: rotateX(6deg); }
-/* subtle desk texture */
-.book-wrap::before{ content:""; position:absolute; inset:-40px; background:url('https://images.unsplash.com/photo-1505691723518-36a45b89acb1?auto=format&fit=crop&w=1600&q=80') center/cover; opacity:0.08; z-index:0; border-radius:10px; }
+.book-wrap{ width:var(--book-w); height:var(--book-h); max-width:92%; max-height:86%; position:relative; transform: rotateX(6deg); z-index:20; display:flex; align-items:center; justify-content:center; }
+.book-shadow{ position:absolute; left:50%; transform:translateX(-50%); bottom:-28px; width:64%; height:30px; background: radial-gradient(closest-side, rgba(0,0,0,0.6), transparent); filter: blur(22px); z-index:6; }
 
-/* shadow under book */
-.book-shadow{ position:absolute; left:50%; transform:translateX(-50%); bottom:-22px; width:70%; height:34px; background: radial-gradient(closest-side, rgba(0,0,0,0.6), transparent); filter:blur(22px); z-index:1; }
+/* Book */
+.book{ width:100%; height:100%; position:relative; transform-style:preserve-3d; }
 
-/* Book (stack centered on spine) */
-.book{ width:100%; height:100%; position:relative; transform-style:preserve-3d; z-index:10; }
+/* Spine */
+.spine{ position:absolute; left:50%; top:8px; width:28px; height:calc(100% - 16px); transform:translateX(-50%); background: linear-gradient(180deg,#2b161b,#4a2a36); border-radius:6px; z-index:30; pointer-events:none; opacity:0.95; }
 
-/* spine behind (ensure it's BELOW cover by z-index) */
-.spine{ position:absolute; left:50%; top:8px; width:28px; height:calc(100% - 16px); transform:translateX(-50%); background: linear-gradient(180deg,#2b161b,#4a2a36); border-radius:6px; z-index:50; box-shadow: inset 0 2px 6px rgba(255,255,255,0.02); pointer-events:none; opacity:0.95; }
+/* Stack centered on spine */
+.stack{ position:absolute; inset:0; left:50%; transform:translateX(-50%); width:100%; height:100%; transform-style:preserve-3d; z-index:40; }
 
-/* stack (all leaves) centered on spine */
-.stack{ position:absolute; inset:0; left:50%; transform:translateX(-50%); width:100%; height:100%; transform-style:preserve-3d; z-index:100; }
+/* Generic leaf */
+.leaf{ position:absolute; left:0; top:0; width:100%; height:100%; transform-style:preserve-3d; backface-visibility:hidden; transition: transform 780ms cubic-bezier(.2,.9,.25,1), box-shadow 260ms; will-change:transform; cursor:pointer; }
 
-/* leaf (a physical sheet) */
-.leaf{ position:absolute; left:0; top:0; width:100%; height:100%; transform-style:preserve-3d; backface-visibility:hidden;
-  transition: transform 780ms cubic-bezier(.2,.9,.25,1), box-shadow 240ms; will-change:transform; cursor:pointer; }
+/* Edge thickness */
+.leaf::after{ content:""; position:absolute; right:-var(--leaf-thick); top:6px; bottom:6px; width:var(--leaf-thick); background: linear-gradient(180deg, rgba(0,0,0,0.06), rgba(0,0,0,0.02)); border-radius:3px; }
 
-/* thickness edge on right (visible when closed) */
-.leaf::after{ content:""; position:absolute; right:-var(--leaf-thick); top:6px; bottom:6px; width:var(--leaf-thick);
-  background: linear-gradient(180deg, rgba(0,0,0,0.06), rgba(0,0,0,0.02)); border-radius:3px; }
+/* Face & Back */
+.face{ position:absolute; inset:0; padding:18px; box-sizing:border-box; border-radius:8px; display:flex; gap:16px; align-items:center; justify-content:space-between; background: linear-gradient(180deg,var(--paper), #f6eadc); border:1px solid rgba(0,0,0,0.06); backface-visibility:hidden; }
+.back{ position:absolute; inset:0; padding:18px; box-sizing:border-box; border-radius:8px; display:flex; align-items:center; justify-content:center; background: linear-gradient(180deg,var(--paper), #f6eadc); transform:rotateY(180deg); backface-visibility:hidden; }
 
-/* face (front) */
-.face{ position:absolute; inset:0; padding:20px; box-sizing:border-box; border-radius:8px;
-  display:flex; gap:16px; align-items:center; justify-content:space-between;
-  background: linear-gradient(180deg,var(--paper), #f6eadc);
-  border:1px solid rgba(0,0,0,0.06); backface-visibility:hidden; }
-
-/* backface (content when leaf flipped) */
-.back{ position:absolute; inset:0; padding:20px; box-sizing:border-box; border-radius:8px; display:flex; align-items:center; justify-content:center;
-  background: linear-gradient(180deg,var(--paper), #f6eadc); transform:rotateY(180deg); backface-visibility:hidden; }
-
-/* cover styling (leaf 0) */
-.leaf.cover .face{ background: linear-gradient(180deg,var(--leather-1),var(--leather-2)); color:var(--gold); border-radius:10px; border:3px solid rgba(0,0,0,0.36);
-  box-shadow: 0 20px 70px rgba(0,0,0,0.55), inset 0 6px 18px rgba(255,255,255,0.02); display:flex; align-items:center; justify-content:center; flex-direction:column; text-align:center; }
-
-/* backcover style */
+/* Cover styling */
+.leaf.cover .face{ background: linear-gradient(180deg,var(--leather-1),var(--leather-2)); color:var(--gold); border-radius:10px; border:3px solid rgba(0,0,0,0.36); box-shadow: 0 20px 70px rgba(0,0,0,0.55), inset 0 6px 18px rgba(255,255,255,0.02); display:flex; align-items:center; justify-content:center; flex-direction:column; text-align:center; }
 .leaf.backcover .face{ background: linear-gradient(180deg,var(--leather-2),var(--leather-1)); border-radius:10px; border:3px solid rgba(0,0,0,0.34); }
 
-/* columns */
+/* Columns */
 .col{ width:48%; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; gap:10px; text-align:center; }
 .col img{ width:100%; height:auto; max-height:48%; object-fit:cover; border-radius:8px; box-shadow: 0 6px 18px rgba(0,0,0,0.12) inset; }
 .midtext{ color:#3b2d26; font-size:1rem; line-height:1.45; }
 
-/* center column for single-column pages */
+/* center column for dedicatoria */
 .center{ width:100%; display:flex; align-items:center; justify-content:center; }
 
-/* flipped class rotates leaf around spine to show back */
+/* flipped state */
 .leaf.flipped{ transform: rotateY(-180deg); box-shadow: 0 6px 40px rgba(0,0,0,0.08); }
 
-/* ensure cover sits above everything when closed */
-.leaf.cover{ z-index:1200; }
-
-/* micro-lift hover */
+/* hover lift */
 .leaf:not(.flipped):hover{ transform: translateZ(8px); }
 
-/* controls under book */
-.controls{ position:absolute; left:50%; transform:translateX(-50%); bottom:-80px; display:flex; gap:12px; z-index:600; }
+/* Controls */
+.controls{ position:absolute; left:50%; transform:translateX(-50%); bottom:-92px; display:flex; gap:12px; z-index:80; }
 .btn{ padding:10px 14px; border-radius:10px; background: linear-gradient(#fff,#f4efe4); border:1px solid rgba(0,0,0,0.06); font-weight:700; cursor:pointer; box-shadow: 0 10px 28px rgba(0,0,0,0.16); }
 
+/* Title intro overlay (animated typing) */
+.introOverlay{
+  position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); z-index:120; pointer-events:none;
+  width:70%; max-width:760px; text-align:center;
+}
+.titleLine{ font-size:2rem; color:var(--gold); text-shadow:0 4px 10px rgba(0,0,0,0.55); margin:0 0 10px 0; opacity:0; transform: translateY(6px); transition:opacity 420ms, transform 420ms;}
+.subtitleLine{ font-size:1rem; color:rgba(255,235,180,0.95); opacity:0; transform: translateY(6px); transition:opacity 420ms, transform 420ms; }
+
+/* final floating note */
+.finalNote{
+  position:absolute; left:50%; top:10%; transform:translateX(-50%); background: rgba(255,255,240,0.95); padding:12px 18px; border-radius:10px; box-shadow:0 12px 30px rgba(0,0,0,0.2); z-index:140; display:none;
+  font-weight:700;
+}
+
 /* responsive tweaks */
-@media (max-width:960px){ :root{ --book-w:88vw; --book-h:56vw; } .controls{ bottom:-96px; } }
+@media (max-width:980px){ :root{ --book-w:88vw; --book-h:56vw; } .controls{ bottom:-112px; } .titleLine{ font-size:1.6rem; } }
 @media (max-width:520px){ .col img{ max-height:32%; } :root{ --leaf-thick:6px; } }
 </style>
 </head>
 <body>
   <div class="scene">
+    <canvas class="particles" id="particles"></canvas>
+
     <div class="book-wrap" id="bookWrap" aria-label="Libro de regalo">
       <div class="book-shadow" aria-hidden="true"></div>
 
-      <div class="book" id="book">
+      <div class="book" id="book" aria-hidden="false">
         <div class="spine" aria-hidden="true"></div>
 
-        <div class="stack" id="stack">
-          <!-- Cover (leaf 0) -->
+        <div class="stack" id="stack" aria-hidden="false">
+          <!-- Cover -->
           <div class="leaf cover" data-index="0" aria-label="Portada">
             <div class="face">
               <div style="width:100%; text-align:center;">
-                <h1 style="margin:0; font-size:2.8rem; color:var(--gold); text-shadow:0 4px 10px rgba(0,0,0,0.6);">Henia Cisneros</h1>
-                <p style="margin:12px 0 0 0; color:rgba(255,235,180,0.95); font-size:1.05rem;">Con todo mi cariño en tu cumpleaños</p>
+                <h1 style="margin:0; font-size:2.8rem; color:var(--gold);">Henia Cisneros</h1>
+                <p style="margin:10px 0 0 0; color:rgba(255,235,180,0.95); font-size:1.02rem;">Un detalle especial en tu día</p>
               </div>
             </div>
             <div class="back"><div style="width:100%;height:100%"></div></div>
@@ -115,10 +118,10 @@ html,body{height:100%;margin:0;font-family: 'Cormorant Garamond', Georgia, serif
           <div class="leaf" data-index="1" aria-label="Hoja 1">
             <div class="face">
               <div class="col">
-                <img src="img/pagina1_left.jpg" alt="izq 1"><div class="midtext">Foto izquierda 1</div>
+                <img src="img/pagina1_left.jpg" alt="izq 1"><div class="midtext">Momento especial</div>
               </div>
               <div class="col">
-                <img src="img/pagina1_right.jpg" alt="der 1"><div class="midtext">Foto derecha 1</div>
+                <img src="img/pagina1_right.jpg" alt="der 1"><div class="midtext">Recuerdo bonito</div>
               </div>
             </div>
             <div class="back"><div style="text-align:center; color:#3b2d26;">Breve texto o dedicatoria (reverso).</div></div>
@@ -128,21 +131,21 @@ html,body{height:100%;margin:0;font-family: 'Cormorant Garamond', Georgia, serif
           <div class="leaf" data-index="2" aria-label="Hoja 2">
             <div class="face">
               <div class="col">
-                <img src="img/pagina2_left.jpg" alt="izq 2"><div class="midtext">Foto izquierda 2</div>
+                <img src="img/pagina2_left.jpg" alt="izq 2"><div class="midtext">Otro momento</div>
               </div>
               <div class="col">
-                <img src="img/pagina2_right.jpg" alt="der 2"><div class="midtext">Foto derecha 2</div>
+                <img src="img/pagina2_right.jpg" alt="der 2"><div class="midtext">Agradecimiento</div>
               </div>
             </div>
-            <div class="back"><div style="text-align:center; color:#3b2d26;">Otro texto bonito (reverso).</div></div>
+            <div class="back"><div style="text-align:center; color:#3b2d26;">Más recuerdos.</div></div>
           </div>
 
-          <!-- Leaf 3 (dedicatoria) -->
+          <!-- Leaf 3: Dedicatoria -->
           <div class="leaf" data-index="3" aria-label="Dedicatoria">
             <div class="face">
               <div class="center">
                 <div style="max-width:72%; text-align:center;">
-                  <p style="font-size:1.05rem; margin:0 0 10px 0; color:#3b2d26;">Que nunca falte la alegría y el amor en tu vida.</p>
+                  <p style="font-size:1.05rem; margin:0 0 10px 0; color:#3b2d26;">Que este día esté lleno de momentos felices y buenos recuerdos.</p>
                   <p style="font-weight:700; margin:8px 0 0 0;">Con cariño,<br>Manuel</p>
                 </div>
               </div>
@@ -150,13 +153,15 @@ html,body{height:100%;margin:0;font-family: 'Cormorant Garamond', Georgia, serif
             <div class="back"><div></div></div>
           </div>
 
-          <!-- Backcover (leaf last) -->
+          <!-- Backcover -->
           <div class="leaf backcover" data-index="4" aria-label="Contraportada">
-            <div class="face"><div style="text-align:center; color:rgba(255,235,180,0.92)">&nbsp;</div></div>
+            <div class="face"><div style="text-align:center; color:rgba(255,235,180,0.95)">&nbsp;</div></div>
             <div class="back"><div></div></div>
           </div>
         </div><!-- /stack -->
       </div><!-- /book -->
+
+      <div class="finalNote" id="finalNote">Con cariño, Manuel</div>
 
       <!-- controls -->
       <div class="controls" id="controls">
@@ -166,6 +171,11 @@ html,body{height:100%;margin:0;font-family: 'Cormorant Garamond', Georgia, serif
         <button class="btn" id="audioBtn">🔈 Música</button>
       </div>
 
+      <!-- Intro overlay (typing) -->
+      <div class="introOverlay" id="introOverlay" aria-hidden="true">
+        <div id="introTitle" class="titleLine"></div>
+        <div id="introSub" class="subtitleLine"></div>
+      </div>
     </div>
   </div>
 
@@ -174,6 +184,60 @@ html,body{height:100%;margin:0;font-family: 'Cormorant Garamond', Georgia, serif
   <audio id="bgMusic" preload="auto" loop><source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_efc06752a0.mp3?filename=soft-piano-ambient-112191.mp3" type="audio/mpeg"></audio>
 
 <script>
+/* -------------------------
+   Helper: Particles (subtle gold dust)
+   ------------------------- */
+(function particlesInit(){
+  const canvas = document.getElementById('particles');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let w=canvas.width = innerWidth;
+  let h=canvas.height = innerHeight;
+  const particles = [];
+  const count = Math.round((w*h)/90000); // density
+
+  function rand(min,max){ return Math.random()*(max-min)+min; }
+
+  for(let i=0;i<count;i++){
+    particles.push({
+      x: rand(0,w),
+      y: rand(0,h),
+      r: rand(0.6,2.4),
+      a: rand(0.05,0.9),
+      vx: rand(-0.06,0.06),
+      vy: rand(-0.08,0.08)
+    });
+  }
+
+  function resize(){ w=canvas.width=innerWidth; h=canvas.height=innerHeight; }
+  addEventListener('resize', resize);
+
+  function draw(){
+    ctx.clearRect(0,0,w,h);
+    for(const p of particles){
+      p.x += p.vx; p.y += p.vy;
+      if(p.x < -10) p.x = w + 10;
+      if(p.x > w + 10) p.x = -10;
+      if(p.y < -10) p.y = h + 10;
+      if(p.y > h + 10) p.y = -10;
+      ctx.globalAlpha = Math.max(0.03, Math.min(0.9, p.a));
+      const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r*6);
+      g.addColorStop(0, 'rgba(255,240,190,'+ (0.9*p.a) +')');
+      g.addColorStop(0.5, 'rgba(255,230,150,'+ (0.55*p.a) +')');
+      g.addColorStop(1, 'rgba(255,200,100,0)');
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r*6, 0, Math.PI*2);
+      ctx.fill();
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* -------------------------
+   Book logic + typing + audio fade
+   ------------------------- */
 (function(){
   const stack = document.getElementById('stack');
   const leaves = Array.from(stack.querySelectorAll('.leaf'));
@@ -183,34 +247,35 @@ html,body{height:100%;margin:0;font-family: 'Cormorant Garamond', Georgia, serif
   const audioBtn = document.getElementById('audioBtn');
   const pageSound = document.getElementById('pageSound');
   const bgMusic = document.getElementById('bgMusic');
+  const introOverlay = document.getElementById('introOverlay');
+  const introTitle = document.getElementById('introTitle');
+  const introSub = document.getElementById('introSub');
+  const finalNote = document.getElementById('finalNote');
 
   let current = 0;
   let audioOn = false;
   let isAnimating = false;
 
   function init(){
-    // cover must be on top when closed
     for(let i=0;i<leaves.length;i++){
-      const z = 1200 - i;
-      leaves[i].style.zIndex = z;
+      leaves[i].style.zIndex = 1000 - i;
       leaves[i].classList.remove('flipped');
       leaves[i].style.transform = 'rotateY(0deg)';
-      leaves[i].style.transition = 'transform 780ms cubic-bezier(.2,.9,.25,1), box-shadow 240ms';
+      leaves[i].style.transition = 'transform 780ms cubic-bezier(.2,.9,.25,1), box-shadow 260ms';
       leaves[i].style.willChange = 'transform';
     }
-    // ensure spine is behind cover (cover z higher)
-    // (spine is separate in CSS with lower z)
     current = 0;
+    finalNote.style.display = 'none';
   }
+
   init();
 
-  // preload imgs
   function preloadImages(){
     const imgs = Array.from(document.querySelectorAll('.face img'));
     return Promise.all(imgs.map(img=>{
       return new Promise(res=>{
         if(!img || !img.src) return res();
-        const i = new Image(); i.onload = i.onerror = res; i.src = img.src;
+        const i = new Image(); i.onload=i.onerror = res; i.src = img.src;
       });
     }));
   }
@@ -219,24 +284,24 @@ html,body{height:100%;margin:0;font-family: 'Cormorant Garamond', Georgia, serif
     try{ if(audioOn){ pageSound.currentTime=0; pageSound.play().catch(()=>{}); } }catch(e){}
   }
 
+  function showFinalNote(){
+    finalNote.style.display = 'block';
+    finalNote.style.opacity = '0';
+    finalNote.style.transform = 'translateY(-6px)';
+    setTimeout(()=>{ finalNote.style.transition = 'opacity 420ms, transform 420ms'; finalNote.style.opacity='1'; finalNote.style.transform='translateY(0)'; }, 40);
+  }
+
   function flipNext(){
     if(isAnimating) return;
     if(current >= leaves.length) return;
     isAnimating = true;
     const leaf = leaves[current];
     leaf.style.zIndex = 2000;
-    // flip
     requestAnimationFrame(()=>{ leaf.classList.add('flipped'); leaf.style.transform = 'rotateY(-180deg)'; });
     playPageSound();
-    const done = (ev) => {
-      if(ev && ev.target !== leaf) return;
-      leaf.removeEventListener('transitionend', done);
-      leaf.style.zIndex = 10 + current;
-      current++;
-      isAnimating = false;
-    };
-    leaf.addEventListener('transitionend', done);
-    setTimeout(()=>{ if(isAnimating){ leaf.removeEventListener('transitionend', done); leaf.style.zIndex = 10 + current; current++; isAnimating=false; } }, 900);
+    const onEnd = (ev)=>{ if(ev && ev.target !== leaf) return; leaf.removeEventListener('transitionend', onEnd); leaf.style.zIndex = 10 + current; current++; isAnimating=false; if(current === leaves.length) showFinalNote(); };
+    leaf.addEventListener('transitionend', onEnd);
+    setTimeout(()=>{ if(isAnimating){ leaf.removeEventListener('transitionend', onEnd); leaf.style.zIndex = 10 + current; current++; isAnimating=false; if(current === leaves.length) showFinalNote(); } }, 950);
   }
 
   function flipPrev(){
@@ -248,37 +313,64 @@ html,body{height:100%;margin:0;font-family: 'Cormorant Garamond', Georgia, serif
     leaf.style.zIndex = 2000;
     requestAnimationFrame(()=>{ leaf.classList.remove('flipped'); leaf.style.transform = 'rotateY(0deg)'; });
     playPageSound();
-    const done = (ev) => {
-      if(ev && ev.target !== leaf) return;
-      leaf.removeEventListener('transitionend', done);
-      init(); // safe restore stacking
-      isAnimating = false;
-    };
-    leaf.addEventListener('transitionend', done);
-    setTimeout(()=>{ if(isAnimating){ leaf.removeEventListener('transitionend', done); init(); isAnimating=false; } }, 900);
+    const onEnd = (ev)=>{ if(ev && ev.target !== leaf) return; leaf.removeEventListener('transitionend', onEnd); init(); isAnimating=false; finalNote.style.display='none'; };
+    leaf.addEventListener('transitionend', onEnd);
+    setTimeout(()=>{ if(isAnimating){ leaf.removeEventListener('transitionend', onEnd); init(); isAnimating=false; finalNote.style.display='none'; } }, 950);
     current = idx;
   }
 
   function resetBook(){
     if(isAnimating) return;
     isAnimating = true;
-    leaves.forEach((leaf,i)=>{ leaf.classList.remove('flipped'); leaf.style.transform='rotateY(0deg)'; leaf.style.zIndex = 1200 - i; });
+    leaves.forEach((leaf,i)=>{ leaf.classList.remove('flipped'); leaf.style.transform='rotateY(0deg)'; leaf.style.zIndex = 1000 - i; });
     setTimeout(()=>{ init(); isAnimating=false; }, 420);
+  }
+
+  // audio fade utilities
+  function fadeInAudio(audioEl, target=0.22, time=800){
+    try{
+      audioEl.volume = 0;
+      const step = 50;
+      const ticks = time/step;
+      let t=0;
+      audioEl.play().catch(()=>{});
+      const iv = setInterval(()=>{ t++; audioEl.volume = Math.min(target, (t/ticks)*target); if(t>=ticks) clearInterval(iv); }, step);
+    }catch(e){}
+  }
+  function fadeOutAudio(audioEl, time=600){
+    try{
+      const step=60; const ticks=time/step; let t=0; const start = audioEl.volume;
+      const iv = setInterval(()=>{ t++; audioEl.volume = Math.max(0, start * (1 - (t/ticks))); if(t>=ticks){ clearInterval(iv); audioEl.pause(); } }, step);
+    }catch(e){}
   }
 
   function toggleAudio(){
     audioOn = !audioOn;
-    if(audioOn){ bgMusic.volume = 0.22; bgMusic.play().catch(()=>{}); audioBtn.textContent='🔊 Música ON'; try{ pageSound.currentTime=0; pageSound.play().catch(()=>{}); }catch(e){} }
-    else { bgMusic.pause(); audioBtn.textContent='🔈 Música'; }
+    if(audioOn){ fadeInAudio(bgMusic, 0.22, 900); audioBtn.textContent='🔊 Música ON'; pageSound.currentTime=0; pageSound.play().catch(()=>{}); }
+    else{ fadeOutAudio(bgMusic, 700); audioBtn.textContent='🔈 Música'; }
   }
 
+  // typing effect for intro overlay
+  function typeIntro(){
+    introOverlay.style.display = 'block';
+    const title = "Henia Cisneros";
+    const sub = "Un detalle especial en tu día";
+    introTitle.textContent = '';
+    introSub.textContent = '';
+    // animate title letter by letter
+    let i=0;
+    const tempo = 45;
+    const writer = setInterval(()=>{ introTitle.textContent += title[i] || ''; i++; if(i >= title.length){ clearInterval(writer); introTitle.style.opacity=1; introTitle.style.transform='translateY(0)'; // then subtitle
+      let j=0; const writer2 = setInterval(()=>{ introSub.textContent += sub[j] || ''; j++; if(j>=sub.length){ clearInterval(writer2); setTimeout(()=>{ introOverlay.style.transition='opacity 600ms'; introOverlay.style.opacity=0; setTimeout(()=>{ introOverlay.style.display='none'; introOverlay.style.opacity=1; }, 700); }, 700); } }, tempo); } }, tempo);
+  }
+
+  // click / swipe / keyboard events
   nextBtn.addEventListener('click', flipNext);
   prevBtn.addEventListener('click', flipPrev);
   resetBtn.addEventListener('click', resetBook);
   audioBtn.addEventListener('click', toggleAudio);
 
-  // click on stack: right->next, left->prev
-  stack.addEventListener('click',(ev)=>{
+  stack.addEventListener('click', (ev)=>{
     if(isAnimating) return;
     const rect = stack.getBoundingClientRect();
     const x = ev.clientX - rect.left;
@@ -287,35 +379,32 @@ html,body{height:100%;margin:0;font-family: 'Cormorant Garamond', Georgia, serif
     else flipNext();
   });
 
-  // touch swipe
   let startX=0, startY=0, moved=false;
-  stack.addEventListener('touchstart', e=>{ const t=e.touches[0]; startX=t.clientX; startY=t.clientY; moved=false; }, {passive:true});
+  stack.addEventListener('touchstart', (e)=>{ const t=e.touches[0]; startX=t.clientX; startY=t.clientY; moved=false; }, {passive:true});
   stack.addEventListener('touchmove', ()=>{ moved=true; }, {passive:true});
-  stack.addEventListener('touchend', e=>{
+  stack.addEventListener('touchend', (e)=>{
     if(isAnimating) return;
-    const t = e.changedTouches[0];
-    const dx = t.clientX - startX, dy = t.clientY - startY;
-    if(Math.abs(dx) > 30 && Math.abs(dx) > Math.abs(dy)){ if(dx < 0) flipNext(); else flipPrev(); }
-    else if(!moved) flipNext();
+    const t = e.changedTouches[0]; const dx = t.clientX - startX; const dy = t.clientY - startY;
+    const absDx = Math.abs(dx), absDy = Math.abs(dy);
+    if(absDx > 30 && absDx > absDy){ if(dx < 0) flipNext(); else flipPrev(); } else if(!moved){ flipNext(); }
   }, {passive:true});
 
-  // keyboard
-  document.addEventListener('keydown', e=>{ if(isAnimating) return; if(e.key==='ArrowRight') flipNext(); if(e.key==='ArrowLeft') flipPrev(); });
+  document.addEventListener('keydown', (e)=>{ if(isAnimating) return; if(e.key==='ArrowRight') flipNext(); if(e.key==='ArrowLeft') flipPrev(); });
 
-  // init actions after preload
-  preloadImages().then(()=> {
-    // subtle cover wiggle to invite click
-    const coverLeaf = leaves[0];
-    coverLeaf.style.transition = 'transform 700ms cubic-bezier(.2,.9,.25,1)';
-    setTimeout(()=>{ coverLeaf.style.transform = 'rotateY(-24deg) translateZ(0.02px)'; playPageSound(); }, 600);
-    setTimeout(()=>{ coverLeaf.style.transform = 'rotateY(0deg) translateZ(0.02px)'; }, 1200);
-    // attempt autoplay music
+  // preload images then show intro and attempt music play
+  preloadImages().then(()=>{
+    typeIntro();
+    // small cue: cover wiggle
+    const cover = leaves[0];
+    cover.style.transition = 'transform 700ms cubic-bezier(.2,.9,.25,1)';
+    setTimeout(()=>{ cover.style.transform = 'rotateY(-28deg) translateZ(0.02px)'; playPageSound(); }, 900);
+    setTimeout(()=>{ cover.style.transform = 'rotateY(0deg) translateZ(0.02px)'; }, 1500);
+    // try autoplay music (may be blocked)
     bgMusic.volume = 0.22;
-    bgMusic.play().then(()=>{ audioOn=true; audioBtn.textContent='🔊 Música ON'; }).catch(()=>{/*blocked*/});
+    bgMusic.play().then(()=>{ audioOn = true; audioBtn.textContent='🔊 Música ON'; }).catch(()=>{/*blocked*/});
   });
 
 })();
 </script>
 </body>
 </html>
-
