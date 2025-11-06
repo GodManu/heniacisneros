@@ -1,193 +1,411 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Henia Cisneros — Libro</title>
 <style>
 :root{
-  --desk1:#8c5e3c; --desk2:#c9a87b;
-  --cover:#2d1f28; --cover-reflect:#4b3242;
+  --desk-1:#5a3d2a; /* madera oscura cálida */
+  --desk-2:#8a6242;
+  --leather-1:#32171f; /* cuero burdeos/negro */
+  --leather-2:#4a2330;
   --gold:#c9a84f;
-  --paper:#fbf6ec; --paper-edge:#e5d6bf;
+  --paper:#fbf6ec;
+  --paper-edge:#e5d6bf;
   --stitch:#d2b27a;
-  --shadow: rgba(0,0,0,0.5);
+  --shadow: rgba(0,0,0,0.45);
+  --leaf-thickness: 6px; /* grosor visual de hojas */
 }
 
-html,body{
-  margin:0; padding:0; height:100%; display:flex; align-items:center; justify-content:center;
-  background: linear-gradient(180deg,var(--desk1),var(--desk2));
-  font-family: 'Cormorant Garamond', Georgia, serif;
-  overflow:hidden;
-}
+/* page reset */
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;font-family: 'Cormorant Garamond', Georgia, serif;background: linear-gradient(180deg,var(--desk-1),var(--desk-2));display:flex;align-items:center;justify-content:center;overflow:hidden;color:#2f241f}
 
+/* Scene (desk) */
 .scene{
-  width:90vw; max-width:1200px; height:80vh; max-height:800px;
-  perspective:2500px; position:relative;
-  display:flex; align-items:center; justify-content:center;
+  width:94vw; max-width:1200px; height:86vh; max-height:820px; position:relative;
+  display:flex; align-items:center; justify-content:center; padding:30px;
 }
 
+/* subtle vignette and desk texture (unsplash) */
+.scene::before{
+  content:""; position:absolute; inset:0; border-radius:12px;
+  background-image: url('https://images.unsplash.com/photo-1505691723518-36a45b89acb1?auto=format&fit=crop&w=1600&q=80');
+  background-size:cover; background-position:center; opacity:0.12; mix-blend-mode:multiply; z-index:0;
+}
+
+/* Book wrapper & shadow */
+.book-wrap{ width:820px; max-width:92%; height:540px; max-height:86%; perspective:3000px; position:relative; z-index:10; display:flex; align-items:center; justify-content:center; }
+.book-shadow{ position:absolute; bottom:8%; width:62%; height:28px; background: radial-gradient(closest-side, rgba(0,0,0,0.55), transparent); filter: blur(20px); z-index:2; }
+
+/* Book (spine center) */
 .book{
-  width:700px; max-width:95%; height:480px; max-height:95%;
-  transform-style: preserve-3d;
-  position:relative;
+  width:640px; height:420px; position:relative; transform-style:preserve-3d; z-index:20; pointer-events:auto;
+  display:block;
 }
 
-.cover, .backcover, .page{
-  position:absolute; width:50%; height:100%; border-radius:8px;
-  transform-style: preserve-3d; backface-visibility:hidden;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.25);
-}
+/* Stack container (centered on spine) */
+.stack{ position:absolute; inset:0; left:50%; transform:translateX(-50%); width:100%; height:100%; transform-style:preserve-3d; }
 
-.cover{
+/* Generic leaf (each physical sheet) */
+.leaf{
+  position:absolute;
   left:0; top:0;
-  background: linear-gradient(180deg,var(--cover),var(--cover-reflect));
-  border:3px solid rgba(0,0,0,0.35);
-  display:flex; align-items:center; justify-content:center; flex-direction:column;
-  transform-origin:left center; z-index:1000;
+  width:100%; height:100%;
+  transform-style:preserve-3d;
+  backface-visibility:hidden;
+  transition: transform 820ms cubic-bezier(.2,.9,.25,1), box-shadow 320ms ease;
+  will-change: transform;
+  cursor: pointer;
 }
 
-.cover .title{
-  color: var(--gold); font-size:2rem; font-weight:700;
-  text-shadow: 0 2px 5px rgba(0,0,0,0.6);
-  text-align:center;
+/* simulate leaf edge thickness with pseudo-element on the right (visible when closed) */
+.leaf::after{
+  content:""; position:absolute; right:-var(--leaf-thickness); top:6px; bottom:6px; width:var(--leaf-thickness);
+  background: linear-gradient(180deg, rgba(0,0,0,0.06), rgba(0,0,0,0.02));
+  border-radius:3px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.03);
+  transform: translateZ(0.02px);
 }
 
-.cover .subtitle{
-  color:#d1b76e; font-size:1rem; margin-top:10px;
+/* Cover styling (first leaf is cover) */
+.cover .face{
+  background: linear-gradient(180deg, var(--leather-1), var(--leather-2));
+  border-radius:10px;
+  border: 3px solid rgba(0,0,0,0.36);
+  box-shadow: 0 18px 60px rgba(0,0,0,0.55), inset 0 6px 18px rgba(255,255,255,0.02);
+  display:flex; flex-direction:column; align-items:center; justify-content:center; padding:36px;
+  color:var(--gold); text-align:center;
 }
 
-.backcover{
-  right:0; top:0;
-  background: linear-gradient(180deg,var(--cover-reflect),var(--cover));
-  border:3px solid rgba(0,0,0,0.28);
-  transform-origin:right center; transform: rotateY(180deg); z-index:500;
+/* Inner page face (two-column layout) */
+.face{
+  position:absolute; inset:0; left:0; top:0; padding:20px; box-sizing:border-box; border-radius:8px;
+  background: linear-gradient(180deg, var(--paper), #f6eadc);
+  border:1px solid rgba(0,0,0,0.06);
+  display:flex; align-items:center; justify-content:space-between;
+  gap:12px;
 }
 
-.pages{ position:absolute; left:50%; top:0; width:50%; height:100%; transform-style: preserve-3d; }
+/* left/right columns (each leaf shows both sides by flipping the leaf) */
+.col{ width:48%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:12px; box-sizing:border-box; }
+.col img{ width:100%; height:auto; max-height:48%; object-fit:cover; border-radius:8px; box-shadow:0 6px 18px rgba(0,0,0,0.12) inset; }
+.col .midtext{ margin-top:10px; color:#3b2d26; font-size:1rem; line-height:1.45; }
 
-.page{
-  background: linear-gradient(180deg,var(--paper),#f6eadc);
-  border:1px solid rgba(0,0,0,0.08);
-  left:0; top:0;
-  padding:20px; box-sizing:border-box;
-  display:flex; flex-direction:column; align-items:center; justify-content:center;
-  transform-origin:left center;
+/* when a leaf is flipped, rotate it around spine to show backface */
+.leaf.flipped{ transform: rotateY(-180deg); z-index:0; }
+
+/* backface: to avoid seeing mirrored content, add backside style */
+.leaf .back{ position:absolute; inset:0; left:0; top:0; transform: rotateY(180deg); backface-visibility:hidden;
+  display:flex; align-items:center; justify-content:center; padding:20px; box-sizing:border-box; border-radius:8px;
+  background: linear-gradient(180deg, var(--paper), #f6eadc);
+  border:1px solid rgba(0,0,0,0.04);
 }
 
-.page img{
-  max-width:100%; max-height:45%; object-fit:cover; margin-bottom:10px; border-radius:6px;
-}
+/* spine visual - small center strip to mimic lomo */
+.spine{ position:absolute; left:50%; top:6px; width:22px; height:calc(100% - 12px); transform:translateX(-50%); background: linear-gradient(180deg,#2b161b,#4a2a36); border-radius:6px; box-shadow: inset 0 2px 6px rgba(255,255,255,0.02); z-index:30; pointer-events:none; }
 
-.page .text{
-  text-align:center; font-size:1rem; line-height:1.4; color:#3b2d26;
-}
+/* controls */
+.controls{ position:absolute; bottom:-56px; left:50%; transform:translateX(-50%); display:flex; gap:14px; z-index:40; }
+.btn{ padding:10px 14px; border-radius:10px; background: linear-gradient(#fff,#f4efe4); border:1px solid rgba(0,0,0,0.06); font-weight:700; cursor:pointer; box-shadow: 0 10px 24px rgba(0,0,0,0.18); }
 
-.page.flipped{ transform: rotateY(-180deg); z-index:1; transition: transform 0.8s cubic-bezier(.2,.9,.25,1); }
-
-.controls{ position:absolute; bottom:10px; display:flex; gap:15px; z-index:2000; }
-.controls button{
-  padding:10px 14px; border-radius:8px; border:none; cursor:pointer;
-  font-weight:700; background: linear-gradient(#fff,#f0e8dd); box-shadow:0 5px 15px rgba(0,0,0,0.2);
+/* small responsive */
+@media (max-width:900px){
+  .book{ width:86vw; height:64vw; }
+  .controls{ bottom:-70px; }
+  .col .midtext{ font-size:0.95rem; }
 }
 </style>
 </head>
 <body>
-<div class="scene">
-  <div class="book" id="book">
-    <!-- Portada -->
-    <div class="cover" id="cover">
-      <div class="title">Henia Cisneros</div>
-      <div class="subtitle">Un día especial lleno de cariño</div>
-    </div>
+  <div class="scene">
+    <div class="book-wrap">
+      <div class="book-shadow" aria-hidden="true"></div>
+      <div class="book" id="book">
 
-    <!-- Páginas -->
-    <div class="pages" id="pages">
-      <!-- Página 1 -->
-      <div class="page" data-index="0">
-        <img src="img/pagina1a.jpg" alt="Foto 1">
-        <div class="text">Texto entre fotos ejemplo</div>
-        <img src="img/pagina1b.jpg" alt="Foto 2">
-      </div>
-      <!-- Página 2 -->
-      <div class="page" data-index="1">
-        <img src="img/pagina2a.jpg" alt="Foto 3">
-        <div class="text">Otro mensaje bonito</div>
-        <img src="img/pagina2b.jpg" alt="Foto 4">
-      </div>
-      <!-- Página 3: dedicatoria final -->
-      <div class="page" data-index="2">
-        <div class="text">
-          Que nunca falte la alegría y el amor en tu vida.<br><br>
-          <strong>Con cariño,<br>Manuel</strong>
-        </div>
+        <div class="spine" aria-hidden="true"></div>
+
+        <div class="stack" id="stack">
+          <!-- Cover (leaf 0) -->
+          <div class="leaf cover" data-index="0" aria-label="Portada">
+            <div class="face">
+              <div style="width:100%; text-align:center;">
+                <h1 style="margin:0; font-size:2.4rem; color:var(--gold); text-shadow:0 3px 6px rgba(0,0,0,0.6);">Henia Cisneros</h1>
+                <p style="margin:10px 0 0 0; color:rgba(255,235,180,0.95); font-size:1rem;">Con todo mi cariño en tu cumpleaños</p>
+              </div>
+            </div>
+            <div class="back">
+              <!-- back of cover can be blank or show inner pattern -->
+              <div style="text-align:center; color:#6b574a;">&nbsp;</div>
+            </div>
+          </div>
+
+          <!-- Leaf 1 (first inner sheet) -->
+          <div class="leaf" data-index="1">
+            <div class="face">
+              <div class="col">
+                <img src="img/pagina1a.jpg" alt="foto izquierda 1" />
+                <div class="midtext">Foto izquierda 1</div>
+              </div>
+              <div class="col">
+                <img src="img/pagina1b.jpg" alt="foto derecha 1" />
+                <div class="midtext">Foto derecha 1</div>
+              </div>
+            </div>
+            <div class="back">
+              <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; color:#3b2d26;">
+                <p style="max-width:60%; text-align:center;">Breve texto o dedicatoria entre las fotos.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Leaf 2 -->
+          <div class="leaf" data-index="2">
+            <div class="face">
+              <div class="col">
+                <img src="img/pagina2a.jpg" alt="foto izquierda 2" />
+                <div class="midtext">Foto izquierda 2</div>
+              </div>
+              <div class="col">
+                <img src="img/pagina2b.jpg" alt="foto derecha 2" />
+                <div class="midtext">Foto derecha 2</div>
+              </div>
+            </div>
+            <div class="back">
+              <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; color:#3b2d26;">
+                <p style="max-width:60%; text-align:center;">Otro texto bonito o recuerdo.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Final leaf with dedicatoria as right-hand content -->
+          <div class="leaf" data-index="3">
+            <div class="face">
+              <div class="col" style="width:100%; display:flex; flex-direction:column; justify-content:center; align-items:center;">
+                <p style="font-size:1.05rem; color:#3b2d26; max-width:70%; text-align:center;">Que nunca falte la alegría y el amor en tu vida.</p>
+                <p style="margin-top:18px; font-weight:700;">Con cariño,<br>Manuel</p>
+              </div>
+            </div>
+            <div class="back">
+              <div style="text-align:center; color:#6b574a;">&nbsp;</div>
+            </div>
+          </div>
+
+          <!-- Backcover (last) -->
+          <div class="leaf backcover" data-index="4" aria-label="Contraportada">
+            <div class="face" style="background: linear-gradient(180deg,var(--leather-2),var(--leather-1)); border-radius:8px; border:3px solid rgba(0,0,0,0.28); color:var(--gold); display:flex; align-items:center; justify-content:center;">
+              <div style="text-align:center;">
+                <div style="font-size:1rem; color:rgba(255,235,180,0.92)">&nbsp;</div>
+              </div>
+            </div>
+            <div class="back">
+              <div style="text-align:center; color:#6b574a;"></div>
+            </div>
+          </div>
+        </div><!-- /stack -->
+      </div><!-- /book -->
+
+      <!-- controls -->
+      <div class="controls" aria-hidden="false" id="controls">
+        <button class="btn" id="prevBtn">⟵ Atrás</button>
+        <button class="btn" id="nextBtn">Siguiente ⟶</button>
+        <button class="btn" id="resetBtn">⤺ Reiniciar</button>
+        <button class="btn" id="audioBtn">🔈 Música</button>
       </div>
     </div>
-
-    <!-- Contraportada -->
-    <div class="backcover" id="backcover"></div>
   </div>
 
-  <!-- Controles -->
-  <div class="controls">
-    <button id="prevBtn">⟵ Atrás</button>
-    <button id="nextBtn">Siguiente ⟶</button>
-    <button id="resetBtn">⤺ Reiniciar</button>
-  </div>
-</div>
-
-<!-- Audio -->
-<audio id="pageSound" preload="auto">
-  <source src="https://www.soundjay.com/books/page-turn-4.mp3" type="audio/mpeg">
-</audio>
-<audio id="bgMusic" preload="auto" loop>
-  <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_efc06752a0.mp3?filename=soft-piano-ambient-112191.mp3" type="audio/mpeg">
-</audio>
+  <!-- audio -->
+  <audio id="pageSound" preload="auto"><source src="https://www.soundjay.com/books/page-turn-4.mp3" type="audio/mpeg"></audio>
+  <audio id="bgMusic" preload="auto" loop><source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_efc06752a0.mp3?filename=soft-piano-ambient-112191.mp3" type="audio/mpeg"></audio>
 
 <script>
-const pages = Array.from(document.querySelectorAll('.page'));
-const cover = document.getElementById('cover');
-const backcover = document.getElementById('backcover');
-const nextBtn = document.getElementById('nextBtn');
-const prevBtn = document.getElementById('prevBtn');
-const resetBtn = document.getElementById('resetBtn');
-const pageSound = document.getElementById('pageSound');
-const bgMusic = document.getElementById('bgMusic');
-let current = 0;
+(function(){
+  // Elements
+  const stack = document.getElementById('stack');
+  const leaves = Array.from(stack.querySelectorAll('.leaf'));
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const resetBtn = document.getElementById('resetBtn');
+  const audioBtn = document.getElementById('audioBtn');
+  const pageSound = document.getElementById('pageSound');
+  const bgMusic = document.getElementById('bgMusic');
 
-function playPageSound(){ pageSound.currentTime=0; pageSound.play().catch(()=>{}); }
-function flipNext(){
-  if(current < pages.length){
-    if(current===0) cover.classList.add('flipped');
-    pages[current].classList.add('flipped');
-    playPageSound();
-    current++;
-    if(current===pages.length) backcover.classList.add('flipped');
+  // We use an order such that 0 = cover, 1..N = inner leaves, last = backcover
+  // Current counts how many leaves have been flipped (0..leaves.length)
+  let current = 0;
+  let audioOn = false;
+  let isAnimating = false;
+
+  // Setup initial z-index stacking: cover highest
+  function initStack(){
+    // highest z for cover, then decreasing
+    for(let i=0;i<leaves.length;i++){
+      const z = 1000 - i; // cover gets 1000, next 999, ...
+      leaves[i].style.zIndex = z;
+      // ensure no flipped class initially
+      leaves[i].classList.remove('flipped');
+      // minor GPU hint
+      leaves[i].style.transform = 'translateZ(0.01px)';
+    }
+    // make sure backcover starts rotated (hidden)
+    const back = leaves[leaves.length-1];
+    back.style.transform = 'rotateY(180deg)';
   }
-}
-function flipPrev(){
-  if(current>0){
-    current--;
-    pages[current].classList.remove('flipped');
-    playPageSound();
-    if(current===0) cover.classList.remove('flipped');
-    backcover.classList.remove('flipped');
+  initStack();
+
+  // helper: play page sound only if audioOn
+  function playPageSound(){
+    try{
+      if(audioOn && pageSound){
+        pageSound.currentTime = 0;
+        pageSound.play().catch(()=>{});
+      }
+    }catch(e){}
   }
-}
-function resetBook(){
-  cover.classList.remove('flipped');
-  pages.forEach(p=>p.classList.remove('flipped'));
-  backcover.classList.remove('flipped');
-  current=0;
-}
 
-nextBtn.addEventListener('click', flipNext);
-prevBtn.addEventListener('click', flipPrev);
-resetBtn.addEventListener('click', resetBook);
+  // Flip next leaf (from front to back)
+  function flipNext(){
+    if(isAnimating) return;
+    if(current >= leaves.length) return;
+    const leaf = leaves[current];
+    isAnimating = true;
+    // raise z to top to avoid overlap
+    leaf.style.zIndex = 2000;
+    // add flipped class which rotates around Y to -180deg
+    leaf.classList.add('flipped');
+    // also apply transform explicitly to support some browsers
+    leaf.style.transform = 'rotateY(-180deg)';
+    playPageSound();
+    // timing must match CSS transition (820ms)
+    setTimeout(()=>{
+      // after flip, push leaf behind by setting a low z-index
+      leaf.style.zIndex = 10 + current;
+      current++;
+      isAnimating = false;
+      // if we flipped the last real leaf (before backcover), ensure backcover becomes visible
+      if(current === leaves.length){
+        // show backcover (last leaf) frontally — but we already flipped all leaves
+        // nothing extra needed because last leaf was flipped
+      }
+    }, 840);
+  }
 
-// Optional: autoplay music
-bgMusic.volume=0.2;
-bgMusic.play().catch(()=>{});
+  // Flip previous (unflip last flipped)
+  function flipPrev(){
+    if(isAnimating) return;
+    if(current <= 0) return;
+    isAnimating = true;
+    // target leaf to unflip is current-1
+    const idx = current - 1;
+    const leaf = leaves[idx];
+    // bring it forward temporarily
+    leaf.style.zIndex = 2000;
+    // remove flipped class (CSS will animate rotation back to 0)
+    leaf.classList.remove('flipped');
+    leaf.style.transform = 'rotateY(0deg)';
+    playPageSound();
+    setTimeout(()=>{
+      // restore stacking order
+      initStack();
+      current = idx;
+      isAnimating = false;
+    }, 840);
+  }
+
+  // Reset book
+  function resetBook(){
+    if(isAnimating) return;
+    isAnimating = true;
+    // remove flipped on all leaves
+    leaves.forEach(l => { l.classList.remove('flipped'); l.style.transform = 'rotateY(0deg)'; });
+    // reset current and stacking
+    setTimeout(()=>{ initStack(); current = 0; isAnimating = false; }, 420);
+  }
+
+  // audio toggle - bg music loops
+  function toggleAudio(){
+    audioOn = !audioOn;
+    if(audioOn){
+      bgMusic.volume = 0.22;
+      bgMusic.play().catch(()=>{});
+      audioBtn.textContent = '🔊 Música ON';
+      // small page sound to signal start
+      try{ pageSound.currentTime = 0; pageSound.play().catch(()=>{}); }catch(e){}
+    } else {
+      bgMusic.pause();
+      audioBtn.textContent = '🔈 Música';
+    }
+  }
+
+  // wire buttons
+  nextBtn.addEventListener('click', flipNext);
+  prevBtn.addEventListener('click', flipPrev);
+  resetBtn.addEventListener('click', resetBook);
+  audioBtn.addEventListener('click', toggleAudio);
+
+  // click on stack: right side next, left side prev, center toggles next
+  stack.addEventListener('click', (ev)=>{
+    if(isAnimating) return;
+    const rect = stack.getBoundingClientRect();
+    const x = ev.clientX - rect.left;
+    if(x > rect.width * 0.6) flipNext();
+    else if(x < rect.width * 0.4) flipPrev();
+    else flipNext();
+  });
+
+  // swipe support (mobile)
+  let startX = 0, startY = 0, moved = false;
+  stack.addEventListener('touchstart', (e)=>{ const t = e.touches[0]; startX = t.clientX; startY = t.clientY; moved=false; }, {passive:true});
+  stack.addEventListener('touchmove', ()=>{ moved=true; }, {passive:true});
+  stack.addEventListener('touchend', (e)=>{
+    if(isAnimating) return;
+    const t = e.changedTouches[0];
+    const dx = t.clientX - startX, dy = t.clientY - startY;
+    const absDx = Math.abs(dx), absDy = Math.abs(dy);
+    if(absDx > 30 && absDx > absDy){
+      if(dx < 0) flipNext(); else flipPrev();
+    } else if(!moved){
+      flipNext();
+    }
+  }, {passive:true});
+
+  // keyboard arrows
+  document.addEventListener('keydown', (e)=>{
+    if(isAnimating) return;
+    if(e.key === 'ArrowRight') flipNext();
+    if(e.key === 'ArrowLeft') flipPrev();
+  });
+
+  // Preload images (so flipping isn't delayed)
+  function preloadImgs(){
+    const imgs = Array.from(document.querySelectorAll('.face img'));
+    const promises = imgs.map(img=>{
+      return new Promise(res => {
+        if(!img.src) return res();
+        const i = new Image();
+        i.onload = i.onerror = res;
+        i.src = img.src;
+      });
+    });
+    return Promise.all(promises);
+  }
+
+  // initial: preload, then small auto-open (cover tilt) and allow music try
+  preloadImgs().then(()=>{
+    // tiny tilt to cue opening (cover is leaves[0])
+    const coverLeaf = leaves[0];
+    coverLeaf.style.transition = 'transform 700ms cubic-bezier(.2,.9,.25,1)';
+    setTimeout(()=>{ coverLeaf.style.transform = 'rotateY(-40deg) translateZ(0.02px)'; playPageSound(); }, 600);
+    setTimeout(()=>{ coverLeaf.style.transform = 'rotateY(0deg)'; }, 1100);
+    // try autoplay music (browsers may block)
+    bgMusic.volume = 0.22;
+    bgMusic.play().then(()=>{ audioOn = true; audioBtn.textContent='🔊 Música ON'; }).catch(()=>{ /* blocked */ });
+  });
+
+})();
 </script>
 </body>
 </html>
+
